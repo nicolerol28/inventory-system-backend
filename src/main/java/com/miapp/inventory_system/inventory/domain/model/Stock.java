@@ -19,6 +19,7 @@ public class Stock {
 
     private Stock() {}
 
+    // Stock por primera vez
     public static Stock create(
             Long productId,
             Long warehouseId,
@@ -47,6 +48,26 @@ public class Stock {
 
     public boolean isBelowMinimum() {
         return this.quantity.compareTo(this.minQuantity) < 0;
+    }
+
+    // Reconstituir un Stock desde la base de datos
+    public static Stock reconstitute(
+            Long id,
+            Long productId,
+            Long warehouseId,
+            BigDecimal quantity,
+            BigDecimal minQuantity,
+            LocalDateTime updatedAt) {
+
+        Stock stock = new Stock();
+        stock.id          = id;
+        stock.productId   = productId;
+        stock.warehouseId = warehouseId;
+        stock.quantity    = quantity;
+        stock.minQuantity = minQuantity;
+        stock.updatedAt   = updatedAt;
+
+        return stock;
     }
 }
 

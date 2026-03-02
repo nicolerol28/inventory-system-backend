@@ -80,4 +80,33 @@ public class InventoryMovement {
                 ? currentStock.add(quantity)
                 : currentStock.subtract(quantity);
     }
+
+    public static InventoryMovement reconstitute(
+            Long id,
+            Long productId,
+            Long warehouseId,
+            Long supplierId,
+            Long registeredBy,
+            MovementType movementType,
+            BigDecimal quantity,
+            BigDecimal quantityBefore,
+            BigDecimal quantityAfter,
+            String comment,
+            LocalDateTime createdAt) {
+
+        InventoryMovement movement  = new InventoryMovement();
+        movement.id                 = id;
+        movement.productId          = productId;
+        movement.warehouseId        = warehouseId;
+        movement.supplierId         = supplierId;
+        movement.registeredBy       = registeredBy;
+        movement.movementType       = movementType;
+        movement.quantity           = quantity;
+        movement.quantityBefore     = quantityBefore;
+        movement.quantityAfter      = quantityAfter;
+        movement.comment            = comment;
+        movement.createdAt          = createdAt;
+
+        return movement;
+    }
 }

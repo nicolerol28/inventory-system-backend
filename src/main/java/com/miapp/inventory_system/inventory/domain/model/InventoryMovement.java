@@ -1,6 +1,6 @@
 package com.miapp.inventory_system.inventory.domain.model;
 
-import com.miapp.inventory_system.inventory.domain.exception.InsufficientStockException;
+import com.miapp.inventory_system.shared.exception.InsufficientStockException;
 
 import lombok.Getter;
 

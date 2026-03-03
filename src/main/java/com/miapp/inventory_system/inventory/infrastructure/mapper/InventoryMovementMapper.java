@@ -25,7 +25,11 @@ public class InventoryMovementMapper {
 
     public InventoryMovementJpaEntity toEntity(InventoryMovement domain) {
         InventoryMovementJpaEntity entity = new InventoryMovementJpaEntity();
-        entity.setId(domain.getId());
+
+        if (domain.getId() != null) {
+            entity.setId(domain.getId());
+        }
+
         entity.setProductId(domain.getProductId());
         entity.setWarehouseId(domain.getWarehouseId());
         entity.setSupplierId(domain.getSupplierId());

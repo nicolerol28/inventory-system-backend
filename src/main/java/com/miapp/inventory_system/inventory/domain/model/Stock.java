@@ -1,7 +1,5 @@
 package com.miapp.inventory_system.inventory.domain.model;
 
-import com.miapp.inventory_system.inventory.domain.exception.InsufficientStockException;
-
 import lombok.Getter;
 
 import java.math.BigDecimal;

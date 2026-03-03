@@ -20,7 +20,11 @@ public class StockMapper {
 
     public StockJpaEntity toEntity(Stock domain) {
         StockJpaEntity entity = new StockJpaEntity();
-        entity.setId(domain.getId());
+
+        if (domain.getId() != null) {
+            entity.setId(domain.getId());
+        }
+
         entity.setProductId(domain.getProductId());
         entity.setWarehouseId(domain.getWarehouseId());
         entity.setQuantity(domain.getQuantity());

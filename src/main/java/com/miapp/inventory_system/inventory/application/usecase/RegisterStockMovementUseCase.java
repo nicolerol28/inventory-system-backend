@@ -19,6 +19,7 @@ public class RegisterStockMovementUseCase {
     @Transactional
     public InventoryMovement execute(RegisterStockMovementCommand command) {
 
+        // Obtener stock actual para el producto y almacen especificados
         Stock stock = stockRepository
                 .findByProductIdAndWarehouseId(
                         command.productId(),
@@ -26,6 +27,7 @@ public class RegisterStockMovementUseCase {
                 .orElseThrow(() -> new IllegalArgumentException(
                         "No existe stock registrado para este producto en este almacén"));
 
+        // El dominio crea el movimiento y aplica las reglas de negocio
         InventoryMovement movement = InventoryMovement.create(
                 command.productId(),
                 command.warehouseId(),
@@ -37,11 +39,15 @@ public class RegisterStockMovementUseCase {
                 command.comment()
         );
 
+        // El stock actualiza su cantidad con el resultado del movimiento
         stock.apply(movement);
 
-        inventoryMovementRepository.save(movement);
+        // Capturamos savedMovement porque el repositorio devuelve un objeto nuevo
+        // con el ID asignado por postgresql, el objeto original permanece inmutable.
+        InventoryMovement savedMovement = inventoryMovementRepository.save(movement);
         stockRepository.save(stock);
 
-        return movement;
+        // Retornamos el objeto con su id de la base de datos
+        return savedMovement;
     }
 }

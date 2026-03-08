@@ -1,4 +1,4 @@
-package com.miapp.inventory_system.inventory.api.dto;
+package com.miapp.inventory_system.shared.dto;
 
 import java.util.List;
 

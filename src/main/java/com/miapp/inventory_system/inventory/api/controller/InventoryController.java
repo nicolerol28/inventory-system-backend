@@ -9,13 +9,13 @@ import com.miapp.inventory_system.inventory.application.usecase.InitializeStockU
 import com.miapp.inventory_system.inventory.application.usecase.RegisterStockMovementUseCase;
 import com.miapp.inventory_system.inventory.domain.model.InventoryMovement;
 import com.miapp.inventory_system.inventory.domain.model.Stock;
+import com.miapp.inventory_system.shared.dto.PageResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/inventory")

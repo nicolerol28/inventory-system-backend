@@ -69,14 +69,4 @@ public class UnitController {
     public ResponseEntity<List<UnitResponse>> getAllActive() {
         return ResponseEntity.ok(unitQueryService.getAllActive());
     }
-
-    private UnitResponse toResponse(Unit unit) {
-        return new UnitResponse(
-                unit.getId(),
-                unit.getName(),
-                unit.getSymbol(),
-                unit.isActive(),
-                unit.getCreatedAt()
-        );
-    }
 }

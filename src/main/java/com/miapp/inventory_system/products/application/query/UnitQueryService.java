@@ -4,6 +4,7 @@ import com.miapp.inventory_system.products.api.dto.unit.UnitResponse;
 import com.miapp.inventory_system.products.infrastructure.entity.UnitJpaEntity;
 import com.miapp.inventory_system.products.infrastructure.repository.UnitJpaRepositorySpring;
 import com.miapp.inventory_system.shared.dto.PageResponse;
+import com.miapp.inventory_system.shared.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,7 +23,7 @@ public class UnitQueryService {
     public UnitResponse getById(Long id) {
         return jpaRepository.findById(id)
                 .map(this::toResponse)
-                .orElseThrow(() -> new IllegalArgumentException(
+                .orElseThrow(() -> new ResourceNotFoundException(
                         "No existe una unidad con id: " + id));
     }
 

@@ -3,6 +3,7 @@ package com.miapp.inventory_system.products.application.usecase.unit;
 import com.miapp.inventory_system.products.application.command.unit.UpdateUnitCommand;
 import com.miapp.inventory_system.products.domain.model.Unit;
 import com.miapp.inventory_system.products.domain.repository.UnitRepository;
+import com.miapp.inventory_system.shared.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +18,7 @@ public class UpdateUnitUseCase {
     public Unit execute(UpdateUnitCommand command) {
 
         Unit unit = unitRepository.findById(command.id())
-                .orElseThrow(() -> new IllegalArgumentException(
+                .orElseThrow(() -> new ResourceNotFoundException(
                         "No existe una unidad con id: " + command.id()));
 
         if (unitRepository.existsByNameAndIdNot(command.name(), command.id())) {

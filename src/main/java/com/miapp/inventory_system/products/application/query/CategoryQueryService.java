@@ -4,6 +4,7 @@ import com.miapp.inventory_system.products.api.dto.category.CategoryResponse;
 import com.miapp.inventory_system.products.infrastructure.entity.CategoryJpaEntity;
 import com.miapp.inventory_system.products.infrastructure.repository.CategoryJpaRepositorySpring;
 import com.miapp.inventory_system.shared.dto.PageResponse;
+import com.miapp.inventory_system.shared.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,7 +23,7 @@ public class CategoryQueryService {
     public CategoryResponse getById(Long id) {
         return jpaRepository.findById(id)
                 .map(this::toResponse)
-                .orElseThrow(() -> new IllegalArgumentException("No se encontró una categoria con el id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("No se encontró una categoria con el id: " + id));
     }
 
     public PageResponse<CategoryResponse> getAll(int page, int size) {

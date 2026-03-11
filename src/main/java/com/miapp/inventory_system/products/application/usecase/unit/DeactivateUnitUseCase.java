@@ -2,6 +2,7 @@ package com.miapp.inventory_system.products.application.usecase.unit;
 
 import com.miapp.inventory_system.products.domain.model.Unit;
 import com.miapp.inventory_system.products.domain.repository.UnitRepository;
+import com.miapp.inventory_system.shared.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +17,7 @@ public class DeactivateUnitUseCase {
     public void execute(Long id) {
 
         Unit unit = unitRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException(
+                .orElseThrow(() -> new ResourceNotFoundException(
                         "No existe una unidad con id: " + id));
 
         // validar que no existen productos activos con esta Unit

@@ -3,6 +3,7 @@ package com.miapp.inventory_system.products.application.usecase.category;
 import com.miapp.inventory_system.products.application.command.category.UpdateCategoryCommand;
 import com.miapp.inventory_system.products.domain.model.Category;
 import com.miapp.inventory_system.products.domain.repository.CategoryRepository;
+import com.miapp.inventory_system.shared.exception.ResourceNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,7 @@ public class UpdateCategoryUseCase {
     public Category execute(UpdateCategoryCommand command){
 
         Category category = categoryRepository.findById(command.id())
-                .orElseThrow(() -> new IllegalArgumentException(
+                .orElseThrow(() -> new ResourceNotFoundException(
                         "Categoría no encontrada con id: " + command.id()));
 
         if (categoryRepository.existsByNameAndIdNot(command.name(), command.id())) {

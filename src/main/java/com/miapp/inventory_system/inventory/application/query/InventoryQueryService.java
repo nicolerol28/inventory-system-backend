@@ -7,6 +7,7 @@ import com.miapp.inventory_system.inventory.infrastructure.entity.InventoryMovem
 import com.miapp.inventory_system.inventory.infrastructure.entity.StockJpaEntity;
 import com.miapp.inventory_system.inventory.infrastructure.repository.InventoryMovementJpaRepositorySpring;
 import com.miapp.inventory_system.inventory.infrastructure.repository.StockJpaRepositorySpring;
+import com.miapp.inventory_system.shared.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,7 +30,7 @@ public class InventoryQueryService {
         return stockJpaRepository
                 .findByProductIdAndWarehouseId(productId, warehouseId)
                 .map(this::toStockResponse)
-                .orElseThrow(() -> new IllegalArgumentException(
+                .orElseThrow(() -> new ResourceNotFoundException(
                         "No existe stock para el producto " + productId + " en este almacén"));
     }
 

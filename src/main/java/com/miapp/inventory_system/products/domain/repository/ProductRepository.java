@@ -23,4 +23,6 @@ public interface ProductRepository {
     boolean existsActiveByUnitId(Long unitId);
 
     boolean existsActiveByCategoryId(Long categoryId);
+
+    boolean existsActiveBySupplierId(Long supplierId);
 }

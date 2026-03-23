@@ -10,6 +10,7 @@ import com.miapp.inventory_system.products.application.usecase.category.Register
 import com.miapp.inventory_system.products.application.usecase.category.UpdateCategoryUseCase;
 import com.miapp.inventory_system.products.domain.model.Category;
 import com.miapp.inventory_system.shared.dto.PageResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +31,7 @@ public class CategoryController {
 
     @PostMapping
     public ResponseEntity<CategoryResponse> register(
-            @RequestBody RegisterCategoryRequest request) {
+            @Valid @RequestBody RegisterCategoryRequest request) {
 
         Category category = registerCategoryUseCase.execute(mapper.toCommand(request));
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -40,7 +41,7 @@ public class CategoryController {
     @PutMapping("/{id}")
     public ResponseEntity<CategoryResponse> update(
             @PathVariable Long id,
-            @RequestBody UpdateCategoryRequest request) {
+            @Valid @RequestBody UpdateCategoryRequest request) {
 
         Category category = updateCategoryUseCase.execute(mapper.toCommand(request, id));
         return ResponseEntity.ok(mapper.toResponse(category));

@@ -21,4 +21,6 @@ public interface ProductJpaRepositorySpring extends JpaRepository<ProductJpaEnti
     boolean existsByActiveTrueAndCategoryId(Long categoryId);
 
     List<ProductJpaEntity> findByActiveTrue();
+
+    boolean existsByActiveTrueAndSupplierId(Long supplierId);
 }

@@ -58,4 +58,9 @@ public class ProductJpaRepositoryImpl implements ProductRepository {
     public boolean existsActiveByCategoryId(Long categoryId) {
         return jpaRepository.existsByActiveTrueAndCategoryId(categoryId);
     }
+
+    @Override
+    public boolean existsActiveBySupplierId(Long supplierId) {
+        return jpaRepository.existsByActiveTrueAndSupplierId(supplierId);
+    }
 }

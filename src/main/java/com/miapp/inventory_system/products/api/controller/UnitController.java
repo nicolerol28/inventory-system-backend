@@ -10,6 +10,7 @@ import com.miapp.inventory_system.products.application.usecase.unit.RegisterUnit
 import com.miapp.inventory_system.products.application.usecase.unit.UpdateUnitUseCase;
 import com.miapp.inventory_system.products.domain.model.Unit;
 import com.miapp.inventory_system.shared.dto.PageResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +31,7 @@ public class UnitController {
 
     @PostMapping
     public ResponseEntity<UnitResponse> register(
-            @RequestBody RegisterUnitRequest request) {
+            @Valid @RequestBody RegisterUnitRequest request) {
 
         Unit unit = registerUnitUseCase.execute(mapper.toCommand(request));
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -40,7 +41,7 @@ public class UnitController {
     @PutMapping("/{id}")
     public ResponseEntity<UnitResponse> update(
             @PathVariable Long id,
-            @RequestBody UpdateUnitRequest request) {
+            @Valid @RequestBody UpdateUnitRequest request) {
 
         Unit unit = updateUnitUseCase.execute(mapper.toCommand(request, id));
         return ResponseEntity.ok(mapper.toResponse(unit));

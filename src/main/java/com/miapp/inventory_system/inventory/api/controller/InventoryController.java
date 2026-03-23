@@ -10,6 +10,7 @@ import com.miapp.inventory_system.inventory.application.usecase.RegisterStockMov
 import com.miapp.inventory_system.inventory.domain.model.InventoryMovement;
 import com.miapp.inventory_system.inventory.domain.model.Stock;
 import com.miapp.inventory_system.shared.dto.PageResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +30,7 @@ public class InventoryController {
 
     @PostMapping("/movements")
     public ResponseEntity<InventoryMovementResponse> registerMovement(
-            @RequestBody RegisterStockMovementRequest request) {
+            @Valid  @RequestBody RegisterStockMovementRequest request) {
 
         RegisterStockMovementCommand command = mapper.toCommand(request);
         InventoryMovement movement = registerStockMovementUseCase.execute(command);
@@ -40,7 +41,7 @@ public class InventoryController {
 
     @PostMapping("/stock/initialize")
     public ResponseEntity<StockResponse> initializeStock(
-            @RequestBody InitializeStockRequest request) {
+            @Valid @RequestBody InitializeStockRequest request) {
 
         InitializeStockCommand command = new InitializeStockCommand(
                 request.productId(),

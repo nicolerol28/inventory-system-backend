@@ -10,6 +10,7 @@ import com.miapp.inventory_system.products.application.usecase.product.RegisterP
 import com.miapp.inventory_system.products.application.usecase.product.UpdateProductUseCase;
 import com.miapp.inventory_system.products.domain.model.Product;
 import com.miapp.inventory_system.shared.dto.PageResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +29,7 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<ProductResponse> register(
-            @RequestBody RegisterProductRequest request) {
+            @Valid @RequestBody RegisterProductRequest request) {
 
         Product product = registerProductUseCase.execute(mapper.toCommand(request));
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -38,7 +39,7 @@ public class ProductController {
     @PutMapping("/{id}")
     public ResponseEntity<ProductResponse> update(
             @PathVariable Long id,
-            @RequestBody UpdateProductRequest request) {
+            @Valid @RequestBody UpdateProductRequest request) {
 
         Product product = updateProductUseCase.execute(mapper.toCommand(request, id));
         return ResponseEntity.ok(mapper.toResponse(product));

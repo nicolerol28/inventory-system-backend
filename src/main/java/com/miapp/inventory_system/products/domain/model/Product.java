@@ -34,7 +34,7 @@ public class Product {
             Optional<BigDecimal> purchasePrice,
             Optional<BigDecimal> salePrice) {
 
-        validate(name, sku, unitId, categoryId);
+        validate(name, sku, unitId, categoryId, purchasePrice, salePrice);
 
         Product product = new Product();
         product.name          = name;
@@ -47,6 +47,7 @@ public class Product {
         product.salePrice     = salePrice;
         product.active        = true;
         product.createdAt     = LocalDateTime.now();
+        product.updatedAt  = LocalDateTime.now();
 
         return product;
     }
@@ -92,7 +93,7 @@ public class Product {
             Optional<BigDecimal> purchasePrice,
             Optional<BigDecimal> salePrice) {
 
-        validate(name, sku, unitId, categoryId);
+        validate(name, sku, unitId, categoryId, purchasePrice, salePrice);
 
         this.name          = name;
         this.description   = description;
@@ -117,7 +118,9 @@ public class Product {
             String name,
             String sku,
             Long unitId,
-            Long categoryId) {
+            Long categoryId,
+            Optional<BigDecimal> purchasePrice,
+            Optional<BigDecimal> salePrice) {
 
         if (name == null || name.isBlank()) {
             throw new IllegalArgumentException("El nombre del producto no puede estar vacío");
@@ -131,6 +134,20 @@ public class Product {
         if (categoryId == null) {
             throw new IllegalArgumentException("La categoría es obligatoria");
         }
+
+        purchasePrice.ifPresent(p -> {
+            if (p.compareTo(BigDecimal.ZERO) <= 0) {
+                throw new IllegalArgumentException(
+                        "El precio de compra debe ser mayor a cero");
+            }
+        });
+
+        salePrice.ifPresent(p -> {
+            if (p.compareTo(BigDecimal.ZERO) <= 0) {
+                throw new IllegalArgumentException(
+                        "El precio de venta debe ser mayor a cero");
+            }
+        });
     }
 
 }

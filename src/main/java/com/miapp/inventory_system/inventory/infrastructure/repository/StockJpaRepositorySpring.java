@@ -18,4 +18,5 @@ public interface StockJpaRepositorySpring extends JpaRepository<StockJpaEntity, 
             Long warehouseId,
             Pageable pageable);
 
+    boolean existsByWarehouseId(Long warehouseId);
 }

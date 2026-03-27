@@ -38,11 +38,15 @@ CREATE TABLE IF NOT EXISTS warehouses (
 -- Users
 CREATE TABLE IF NOT EXISTS users (
     id          BIGSERIAL     PRIMARY KEY,
-    name        VARCHAR(150)  NOT NULL,
-    email       VARCHAR(150)  NOT NULL UNIQUE,
+    name        VARCHAR(100)  NOT NULL,
+    email       VARCHAR(255)  NOT NULL,
+    password    VARCHAR(255)  NOT NULL,
+    role        VARCHAR(50)   NOT NULL CHECK (role IN ('ADMIN', 'OPERATOR')),
     active      BOOLEAN       NOT NULL DEFAULT TRUE,
     created_at  TIMESTAMP     NOT NULL DEFAULT NOW(),
-    updated_at  TIMESTAMP     NOT NULL DEFAULT NOW()
+    updated_at  TIMESTAMP     NOT NULL DEFAULT NOW(),
+
+    CONSTRAINT uq_users_email UNIQUE (email)
 );
 
 -- Products
@@ -99,4 +103,16 @@ CREATE TABLE IF NOT EXISTS inventory_movements (
         CHECK (quantity > 0),
     CONSTRAINT chk_quantity_after_non_negative
         CHECK (quantity_after >= 0)
+);
+
+-- Seed: usuario admin inicial
+INSERT INTO users (name, email, password, role, active, created_at, updated_at)
+VALUES (
+    'Administrador',
+    'admin@inventory.com',
+    '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy',
+    'ADMIN',
+    TRUE,
+    NOW(),
+    NOW()
 );

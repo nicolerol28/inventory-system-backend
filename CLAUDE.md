@@ -12,7 +12,6 @@
 - Maven
 
 ## Base de datos
-
 ```bash
 docker-compose up -d
 ```
@@ -21,10 +20,25 @@ PostgreSQL corre en el **puerto 5433** del host (mapeado al 5432 del contenedor)
 
 Las credenciales de conexión se configuran en `application.properties` (no se commitea) o mediante variables de entorno. Ver `.env.example` en la raíz del proyecto.
 
+## Comandos útiles
+```bash
+# Compilar sin tests
+mvnw.cmd clean package -DskipTests
+
+# Correr la app (requiere Docker y .env configurado)
+mvnw.cmd spring-boot:run
+
+# Iniciar base de datos
+docker-compose up -d
+```
+
+Variables de entorno requeridas (ver `.env.example`):
+- `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD` — conexión PostgreSQL
+- `JWT_SECRET`, `JWT_EXPIRATION_MS` — configuración JWT
+
 ## Arquitectura: Monolito Modular + Clean Architecture
 
 El proyecto está dividido en módulos de negocio. Cada módulo sigue la misma estructura de capas:
-
 ```
 {modulo}/
   domain/
@@ -65,7 +79,6 @@ Se aplica separación entre comandos y consultas dentro de cada módulo:
 
 - **Comandos** (`UseCase`): operaciones de escritura. Pasan por el dominio, usan el repositorio del dominio (interfaz), aplican reglas de negocio.
 - **Consultas** (`QueryService`): operaciones de solo lectura. Van **directamente a la capa JPA** (`JpaRepositorySpring`) sin pasar por el dominio. No tienen efecto secundario.
-
 ```
 // Comando — pasa por dominio
 RegisterStockMovementUseCase → StockRepository (interfaz dominio) → StockRepositoryImpl → JPA
@@ -95,7 +108,6 @@ Los modelos de dominio tienen **constructor privado** y se instancian exclusivam
 |---|---|
 | `create(...)` | Crear una entidad nueva. Ejecuta validaciones y asigna `createdAt`, `updatedAt`, `active = true`. |
 | `reconstitute(...)` | Reconstruir desde la base de datos. Acepta todos los campos incluyendo `id`, sin validaciones de negocio. |
-
 ```java
 // Correcto
 Product product = Product.create(name, description, sku, unitId, categoryId, supplierId, purchasePrice, salePrice);
@@ -110,10 +122,9 @@ La lógica de negocio (validaciones, cambios de estado) vive **dentro del modelo
 ### Relaciones entre módulos
 
 Los módulos no se referencian entre sí mediante objetos. Solo se usan IDs:
-
 ```java
 // Correcto — solo ID
-private final UUID warehouseId;
+private final Long warehouseId;
 
 // Prohibido — referencia entre módulos
 private final Warehouse warehouse;
@@ -130,7 +141,6 @@ Si un módulo necesita validar la existencia de un recurso de otro módulo, se d
 ### Seguridad (módulo `users`)
 
 Autenticación basada en **JWT + Spring Security**. El módulo `users` sigue la misma estructura de capas que los demás módulos, con una subcarpeta adicional en infraestructura:
-
 ```
 users/
   infrastructure/
@@ -138,7 +148,6 @@ users/
 ```
 
 Los componentes transversales de seguridad viven en `shared/security/`:
-
 ```
 shared/
   security/

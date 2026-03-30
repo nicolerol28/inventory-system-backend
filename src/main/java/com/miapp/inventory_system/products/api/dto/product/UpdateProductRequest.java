@@ -3,6 +3,7 @@ package com.miapp.inventory_system.products.api.dto.product;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 
 import java.math.BigDecimal;
 import java.util.Optional;
@@ -11,6 +12,7 @@ public record UpdateProductRequest(
         @NotBlank(message = "El nombre es obligatorio")
         String name,
 
+        @Size(max = 150, message = "La descripción no puede superar los 150 caracteres")
         String description,
 
         @NotBlank(message = "El SKU es obligatorio")

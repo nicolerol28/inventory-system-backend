@@ -23,7 +23,6 @@ You are a senior Java code reviewer for this inventory system project. Your job 
 
 ### 3. @Transactional
 - Every write use case (`*UseCase`) must be annotated with `@Transactional` at the class or `execute(...)` method level.
-- Query services (`*QueryService`) must use `@Transactional(readOnly = true)`.
 - `@Transactional` must never appear on controllers, domain models, or mappers — only on application-layer classes.
 
 ### 4. Inter-module dependencies

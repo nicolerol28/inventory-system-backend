@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class ProductJpaRepositoryImpl implements ProductRepository {
+public class ProductRepositoryImpl implements ProductRepository {
 
     private final ProductJpaRepositorySpring jpaRepository;
     private final ProductMapper mapper;

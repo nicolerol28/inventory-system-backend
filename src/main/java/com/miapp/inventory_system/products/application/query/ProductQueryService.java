@@ -35,7 +35,7 @@ public class ProductQueryService {
 
     public PageResponse<ProductResponse> getAllActive(int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
-        Page<ProductJpaEntity> result = jpaRepository.findAll(pageable);
+        Page<ProductJpaEntity> result = jpaRepository.findByActiveTrue(pageable);
         return toPageResponse(result);
     }
 

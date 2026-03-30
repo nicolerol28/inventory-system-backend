@@ -134,7 +134,7 @@ Los roles disponibles son `ADMIN` y `OPERATOR`, definidos en `users/domain/model
 - Los **mappers de infraestructura** convierten Domain ↔ JPA Entity.
 - Las entidades JPA llevan el sufijo `JpaEntity` (e.g., `ProductJpaEntity`).
 - Los repositorios Spring Data llevan el sufijo `JpaRepositorySpring` (e.g., `ProductJpaRepositorySpring`).
-- Las implementaciones del puerto llevan el sufijo `RepositoryImpl` (e.g., `ProductJpaRepositoryImpl`).
+- Las implementaciones del puerto llevan el sufijo `RepositoryImpl` (e.g., `ProductRepositoryImpl`).
 
 ---
 

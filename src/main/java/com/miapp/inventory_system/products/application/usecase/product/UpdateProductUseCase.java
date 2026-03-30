@@ -4,7 +4,7 @@ import com.miapp.inventory_system.products.application.command.product.UpdatePro
 import com.miapp.inventory_system.products.domain.model.Product;
 import com.miapp.inventory_system.products.domain.repository.ProductRepository;
 import com.miapp.inventory_system.shared.exception.ResourceNotFoundException;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

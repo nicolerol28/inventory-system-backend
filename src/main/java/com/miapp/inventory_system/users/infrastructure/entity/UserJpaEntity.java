@@ -21,13 +21,13 @@ public class UserJpaEntity {
     @Column(nullable = false, length = 100)
     private String name;
 
-    @Column(nullable = false, unique = true, length = 255)
+    @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false)
     private String role;
 
     @Column(nullable = false)

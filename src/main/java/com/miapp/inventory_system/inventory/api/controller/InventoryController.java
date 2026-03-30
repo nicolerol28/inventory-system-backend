@@ -54,6 +54,7 @@ public class InventoryController {
         StockResponse response = new StockResponse(
                 stock.getId(),
                 stock.getProductId(),
+                "Producto #" + stock.getProductId(),
                 stock.getWarehouseId(),
                 stock.getQuantity(),
                 stock.getMinQuantity(),

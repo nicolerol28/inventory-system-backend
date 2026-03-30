@@ -6,7 +6,10 @@
       "Bash(pip --version)",
       "Bash(pip3 --version)",
       "Bash(pip install:*)",
-      "Bash(git filter-repo:*)"
+      "Bash(git filter-repo:*)",
+      "mcp__postman__getWorkspaces",
+      "mcp__postman__createCollection",
+      "mcp__postman__getCollections"
     ]
   }
 }

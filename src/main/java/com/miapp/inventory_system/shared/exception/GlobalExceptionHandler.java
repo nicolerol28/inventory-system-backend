@@ -69,7 +69,7 @@ public class GlobalExceptionHandler {
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 "Internal Server Error",
-                "Ocurrió un error inesperado. Por favor contacte al administrador.",
+                ex.getMessage(),
                 request.getRequestURI(),
                 LocalDateTime.now()
         );

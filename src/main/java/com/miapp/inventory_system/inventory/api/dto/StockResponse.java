@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 public record StockResponse(
         Long id,
         Long productId,
+        String productName,
         Long warehouseId,
         BigDecimal quantity,
         BigDecimal minQuantity,

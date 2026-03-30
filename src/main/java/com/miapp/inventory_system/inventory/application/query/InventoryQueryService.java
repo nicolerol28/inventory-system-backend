@@ -1,6 +1,8 @@
 package com.miapp.inventory_system.inventory.application.query;
 
 import com.miapp.inventory_system.inventory.api.dto.InventoryMovementResponse;
+import com.miapp.inventory_system.products.infrastructure.entity.ProductJpaEntity;
+import com.miapp.inventory_system.products.infrastructure.repository.ProductJpaRepositorySpring;
 import com.miapp.inventory_system.shared.dto.PageResponse;
 import com.miapp.inventory_system.inventory.api.dto.StockResponse;
 import com.miapp.inventory_system.inventory.infrastructure.entity.InventoryMovementJpaEntity;
@@ -24,6 +26,7 @@ public class InventoryQueryService {
 
     private final StockJpaRepositorySpring stockJpaRepository;
     private final InventoryMovementJpaRepositorySpring movementJpaRepository;
+    private final ProductJpaRepositorySpring productJpaRepository;
 
     // Consulta stock de un producto en un almacen especifico
     public StockResponse getStock(Long productId, Long warehouseId) {
@@ -85,9 +88,14 @@ public class InventoryQueryService {
     // Metodos privados de conversion
 
     private StockResponse toStockResponse(StockJpaEntity entity) {
+        String productName = productJpaRepository.findById(entity.getProductId())
+                .map(ProductJpaEntity::getName)
+                .orElse("Producto #" + entity.getProductId());
+
         return new StockResponse(
                 entity.getId(),
                 entity.getProductId(),
+                productName,
                 entity.getWarehouseId(),
                 entity.getQuantity(),
                 entity.getMinQuantity(),

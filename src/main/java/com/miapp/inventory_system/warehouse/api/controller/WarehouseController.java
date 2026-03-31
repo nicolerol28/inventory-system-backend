@@ -60,10 +60,12 @@ public class WarehouseController {
 
     @GetMapping
     public ResponseEntity<PageResponse<WarehouseResponse>> getAll(
-            @RequestParam(defaultValue = "0")  int page,
-            @RequestParam(defaultValue = "20") int size) {
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(required = false) String name,
+            @RequestParam(defaultValue = "all") String filterActive) {
 
-        return ResponseEntity.ok(warehouseQueryService.getAll(page, size));
+        return ResponseEntity.ok(warehouseQueryService.getAll(page, size, name, filterActive));
     }
 
     @GetMapping("/active")

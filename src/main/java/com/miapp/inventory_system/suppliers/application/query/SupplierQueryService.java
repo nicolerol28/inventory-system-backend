@@ -27,14 +27,28 @@ public class SupplierQueryService {
                         "No se encontró un proveedor con el id: " + id));
     }
 
-    public PageResponse<SupplierResponse> getAll(int page, int size) {
+    public PageResponse<SupplierResponse> getAll(int page, int size, String name, String filterActive) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
-        Page<SupplierJpaEntity> result = jpaRepository.findAll(pageable);
+
+        Page<SupplierJpaEntity> result;
+        boolean hasName = name != null && !name.isBlank();
+        boolean onlyActive = "active".equals(filterActive);
+
+        if (hasName && onlyActive) {
+            result = jpaRepository.findByActiveTrueAndNameContainingIgnoreCase(name, pageable);
+        } else if (hasName) {
+            result = jpaRepository.findByNameContainingIgnoreCase(name, pageable);
+        } else if (onlyActive) {
+            result = jpaRepository.findByActiveTrue(pageable);
+        } else {
+            result = jpaRepository.findAll(pageable);
+        }
+
         return toPageResponse(result);
     }
 
     public List<SupplierResponse> getAllActive() {
-        return jpaRepository.findByActiveTrue()
+        return jpaRepository.findAllActive()
                 .stream()
                 .map(this::toResponse)
                 .toList();

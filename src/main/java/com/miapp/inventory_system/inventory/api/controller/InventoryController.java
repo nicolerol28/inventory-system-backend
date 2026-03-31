@@ -89,11 +89,13 @@ public class InventoryController {
     @GetMapping("/stock/warehouse/{warehouseId}")
     public ResponseEntity<PageResponse<StockResponse>> getStockByWarehouse(
             @PathVariable Long warehouseId,
-            @RequestParam(defaultValue = "0")  int page,
-            @RequestParam(defaultValue = "20") int size) {
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(required = false) String productName,
+            @RequestParam(defaultValue = "asc") String sortOrder) {
 
         return ResponseEntity.ok(
-                queryService.getStockByWarehouse(warehouseId, page, size));
+                queryService.getStockByWarehouse(warehouseId, page, size, productName, sortOrder));
     }
 
     @GetMapping("/movements/warehouse/{warehouseId}")

@@ -39,11 +39,17 @@ public class InventoryQueryService {
 
     // Consulta stock paginado de todos los productos en un almacen
     public PageResponse<StockResponse> getStockByWarehouse(
-            Long warehouseId, int page, int size) {
+            Long warehouseId, int page, int size, String productName, String sortOrder) {
 
-        Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
-        Page<StockJpaEntity> result =
-                stockJpaRepository.findByWarehouseId(warehouseId, pageable);
+        Sort sort = "desc".equals(sortOrder)
+                ? Sort.by("quantity").descending()
+                : Sort.by("quantity").ascending();
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Page<StockJpaEntity> result = (productName != null && !productName.isBlank())
+                ? stockJpaRepository.findByWarehouseIdAndProductNameContaining(warehouseId, productName, pageable)
+                : stockJpaRepository.findByWarehouseId(warehouseId, pageable);
 
         return toPageResponse(result, this::toStockResponse);
     }

@@ -21,6 +21,8 @@ public interface StockJpaRepositorySpring extends JpaRepository<StockJpaEntity, 
 
     boolean existsByWarehouseId(Long warehouseId);
 
+    boolean existsByProductId(Long productId);
+
     // SQL nativo para evitar acoplamiento entre JPA entities de módulos distintos.
     // StockJpaEntity (inventory) y products (tabla) se relacionan solo a nivel de base de datos.
     @Query(value = """

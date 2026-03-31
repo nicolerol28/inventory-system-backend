@@ -9,7 +9,8 @@
       "Bash(git filter-repo:*)",
       "mcp__postman__getWorkspaces",
       "mcp__postman__createCollection",
-      "mcp__postman__getCollections"
+      "mcp__postman__getCollections",
+      "Bash(xargs grep:*)"
     ]
   }
 }

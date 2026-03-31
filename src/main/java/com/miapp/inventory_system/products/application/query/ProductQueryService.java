@@ -27,9 +27,22 @@ public class ProductQueryService {
                         "No existe un producto con id: " + id));
     }
 
-    public PageResponse<ProductResponse> getAll(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
-        Page<ProductJpaEntity> result = jpaRepository.findAll(pageable);
+    public PageResponse<ProductResponse> getAll(
+            int page, int size, String name, Long categoryId,
+            Long unitId, String sortName, String filterActive) {
+
+        Sort sort = "desc".equals(sortName)
+                ? Sort.by("name").descending()
+                : Sort.by("name").ascending();
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        boolean onlyActive = "active".equals(filterActive);
+
+        Page<ProductJpaEntity> result = onlyActive
+                ? jpaRepository.findByActiveTrueAndFilters(name, categoryId, unitId, pageable)
+                : jpaRepository.findByFilters(name, categoryId, unitId, pageable);
+
         return toPageResponse(result);
     }
 
@@ -53,7 +66,6 @@ public class ProductQueryService {
                 entity.isActive(),
                 entity.getCreatedAt(),
                 entity.getUpdatedAt()
-
         );
     }
 
@@ -72,5 +84,4 @@ public class ProductQueryService {
                 page.isLast()
         );
     }
-
 }

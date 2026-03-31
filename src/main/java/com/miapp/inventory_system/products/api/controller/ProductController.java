@@ -58,10 +58,15 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<PageResponse<ProductResponse>> getAll(
-            @RequestParam(defaultValue = "0")  int page,
-            @RequestParam(defaultValue = "20") int size) {
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) Long unitId,
+            @RequestParam(defaultValue = "asc") String sortName,
+            @RequestParam(defaultValue = "all") String filterActive) {
 
-        return ResponseEntity.ok(productQueryService.getAll(page, size));
+        return ResponseEntity.ok(productQueryService.getAll(page, size, name, categoryId, unitId, sortName, filterActive));
     }
 
     @GetMapping("/active")

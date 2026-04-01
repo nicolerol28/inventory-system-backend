@@ -1,6 +1,7 @@
 package com.miapp.inventory_system.inventory.application.query;
 
 import com.miapp.inventory_system.inventory.api.dto.InventoryMovementResponse;
+import com.miapp.inventory_system.inventory.domain.model.MovementType;
 import com.miapp.inventory_system.products.infrastructure.entity.ProductJpaEntity;
 import com.miapp.inventory_system.products.infrastructure.repository.ProductJpaRepositorySpring;
 import com.miapp.inventory_system.shared.dto.PageResponse;
@@ -68,11 +69,21 @@ public class InventoryQueryService {
 
     // Consulta movimientos paginados de un almacen completo
     public PageResponse<InventoryMovementResponse> getMovementsByWarehouse(
-            Long warehouseId, int page, int size) {
+            Long warehouseId, int page, int size, String movementType) {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
-        Page<InventoryMovementJpaEntity> result =
-                movementJpaRepository.findByWarehouseId(warehouseId, pageable);
+
+        Page<InventoryMovementJpaEntity> result;
+        if (movementType != null && !movementType.isBlank()) {
+            try {
+                MovementType type = MovementType.valueOf(movementType);
+                result = movementJpaRepository.findByWarehouseIdAndMovementType(warehouseId, type, pageable);
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException("Tipo de movimiento inválido: " + movementType);
+            }
+        } else {
+            result = movementJpaRepository.findByWarehouseId(warehouseId, pageable);
+        }
 
         return toPageResponse(result, this::toMovementResponse);
     }

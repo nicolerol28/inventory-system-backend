@@ -1,5 +1,6 @@
 package com.miapp.inventory_system.inventory.infrastructure.repository;
 
+import com.miapp.inventory_system.inventory.domain.model.MovementType;
 import com.miapp.inventory_system.inventory.infrastructure.entity.InventoryMovementJpaEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +19,11 @@ public interface InventoryMovementJpaRepositorySpring
 
     Page<InventoryMovementJpaEntity> findByWarehouseId(
             Long warehouseId,
+            Pageable pageable);
+
+    Page<InventoryMovementJpaEntity> findByWarehouseIdAndMovementType(
+            Long warehouseId,
+            MovementType movementType,
             Pageable pageable);
 
     Page<InventoryMovementJpaEntity> findByWarehouseIdAndCreatedAtBetween(

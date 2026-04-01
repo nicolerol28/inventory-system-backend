@@ -102,10 +102,11 @@ public class InventoryController {
     public ResponseEntity<PageResponse<InventoryMovementResponse>> getMovementsByWarehouse(
             @PathVariable Long warehouseId,
             @RequestParam(defaultValue = "0")  int page,
-            @RequestParam(defaultValue = "20") int size) {
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(required = false) String movementType) {
 
         return ResponseEntity.ok(
-                queryService.getMovementsByWarehouse(warehouseId, page, size));
+                queryService.getMovementsByWarehouse(warehouseId, page, size, movementType));
     }
 
     @GetMapping("/movements/warehouse/{warehouseId}/date-range")

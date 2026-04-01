@@ -31,9 +31,7 @@ public class ProductQueryService {
             int page, int size, String name, Long categoryId,
             Long unitId, String sortName, String filterActive) {
 
-        Sort sort = "desc".equals(sortName)
-                ? Sort.by("name").descending()
-                : Sort.by("name").ascending();
+        Sort sort = Sort.by(Sort.Direction.fromString(sortName), "name");
 
         Pageable pageable = PageRequest.of(page, size, sort);
 

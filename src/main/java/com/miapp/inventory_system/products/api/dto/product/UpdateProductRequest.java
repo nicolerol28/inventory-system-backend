@@ -6,7 +6,6 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
 import java.math.BigDecimal;
-import java.util.Optional;
 
 public record UpdateProductRequest(
         @NotBlank(message = "El nombre es obligatorio")
@@ -29,6 +28,6 @@ public record UpdateProductRequest(
         @Positive(message = "El id del proveedor debe ser positivo")
         Long supplierId,
 
-        Optional<BigDecimal> purchasePrice,
-        Optional<BigDecimal> salePrice
+        BigDecimal purchasePrice,
+        BigDecimal salePrice
 ) {}

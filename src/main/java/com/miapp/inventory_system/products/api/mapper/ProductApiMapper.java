@@ -8,6 +8,8 @@ import com.miapp.inventory_system.products.application.command.product.UpdatePro
 import com.miapp.inventory_system.products.domain.model.Product;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 public class ProductApiMapper {
 
@@ -19,8 +21,8 @@ public class ProductApiMapper {
                 request.unitId(),
                 request.categoryId(),
                 request.supplierId(),
-                request.purchasePrice(),
-                request.salePrice()
+                Optional.ofNullable(request.purchasePrice()),
+                Optional.ofNullable(request.salePrice())
         );
     }
 
@@ -33,8 +35,8 @@ public class ProductApiMapper {
                 request.unitId(),
                 request.categoryId(),
                 request.supplierId(),
-                request.purchasePrice(),
-                request.salePrice()
+                Optional.ofNullable(request.purchasePrice()),
+                Optional.ofNullable(request.salePrice())
         );
     }
 

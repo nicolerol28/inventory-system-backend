@@ -2,7 +2,7 @@ package com.miapp.inventory_system.users.application.usecase;
 
 import com.miapp.inventory_system.shared.exception.ResourceNotFoundException;
 import com.miapp.inventory_system.shared.security.JwtService;
-import com.miapp.inventory_system.users.api.dto.AuthResponse;
+import com.miapp.inventory_system.users.application.LoginResult;
 import com.miapp.inventory_system.users.domain.model.User;
 import com.miapp.inventory_system.users.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ public class LoginUseCase {
     private final UserRepository userRepository;
     private final JwtService jwtService;
 
-    public AuthResponse execute(String email, String password) {
+    public LoginResult execute(String email, String password) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(email, password)
         );
@@ -30,10 +30,11 @@ public class LoginUseCase {
         String token = jwtService.generateToken(
                 user.getId(),
                 user.getEmail(),
-                user.getRole().name()
+                user.getRole().name(),
+                user.getName()
         );
 
-        return new AuthResponse(
+        return new LoginResult(
                 token,
                 user.getId(),
                 user.getRole().name(),

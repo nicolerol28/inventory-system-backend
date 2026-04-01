@@ -27,7 +27,13 @@ public class AuthController {
     public ResponseEntity<AuthResponse> login(
             @Valid @RequestBody LoginRequest request) {
 
-        return ResponseEntity.ok(loginUseCase.execute(request.email(), request.password()));
+        var result = loginUseCase.execute(request.email(), request.password());
+        return ResponseEntity.ok(new AuthResponse(
+                result.token(),
+                result.userId(),
+                result.role(),
+                result.expiresAt()
+        ));
     }
 
     @PostMapping("/register")

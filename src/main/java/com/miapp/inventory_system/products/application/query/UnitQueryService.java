@@ -27,14 +27,28 @@ public class UnitQueryService {
                         "No existe una unidad con id: " + id));
     }
 
-    public PageResponse<UnitResponse> getAll(int page, int size) {
+    public PageResponse<UnitResponse> getAll(int page, int size, String name, String filterActive) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
-        Page<UnitJpaEntity> result = jpaRepository.findAll(pageable);
+
+        Page<UnitJpaEntity> result;
+        boolean hasName = name != null && !name.isBlank();
+        boolean onlyActive = "active".equals(filterActive);
+
+        if (hasName && onlyActive) {
+            result = jpaRepository.findByActiveTrueAndNameContainingIgnoreCase(name, pageable);
+        } else if (hasName) {
+            result = jpaRepository.findByNameContainingIgnoreCase(name, pageable);
+        } else if (onlyActive) {
+            result = jpaRepository.findByActiveTrue(pageable);
+        } else {
+            result = jpaRepository.findAll(pageable);
+        }
+
         return toPageResponse(result);
     }
 
     public List<UnitResponse> getAllActive() {
-        return jpaRepository.findByActiveTrue()
+        return jpaRepository.findAllActive()
                 .stream()
                 .map(this::toResponse)
                 .toList();

@@ -5,7 +5,6 @@ import com.miapp.inventory_system.inventory.domain.model.InventoryMovement;
 import com.miapp.inventory_system.inventory.domain.model.Stock;
 import com.miapp.inventory_system.inventory.domain.repository.InventoryMovementRepository;
 import com.miapp.inventory_system.inventory.domain.repository.StockRepository;
-import com.miapp.inventory_system.shared.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,9 +22,18 @@ public class RegisterStockMovementUseCase {
         // Obtener stock actual para el producto y almacen especificados
         Stock stock = stockRepository
                 .findByProductIdAndWarehouseId(command.productId(), command.warehouseId())
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        "No se encontró stock para el producto " + command.productId() +
-                                " en el almacén " + command.warehouseId()));
+                .orElseGet(() -> {
+                    if (!command.movementType().isInbound()) {
+                        throw new IllegalArgumentException(
+                                "No existe stock para este producto en el almacén. Registre primero una entrada.");
+                    }
+                    Stock newStock = Stock.create(
+                            command.productId(),
+                            command.warehouseId(),
+                            java.math.BigDecimal.ZERO
+                    );
+                    return stockRepository.save(newStock);
+                });
 
         // El dominio crea el movimiento y aplica las reglas de negocio
         InventoryMovement movement = InventoryMovement.create(

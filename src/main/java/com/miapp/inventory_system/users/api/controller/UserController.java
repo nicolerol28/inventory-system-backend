@@ -47,10 +47,13 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<PageResponse<UserResponse>> getAll(
-            @RequestParam(defaultValue = "0")  int page,
-            @RequestParam(defaultValue = "20") int size) {
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(required = false) String name,
+            @RequestParam(defaultValue = "all") String filterActive,
+            @RequestParam(defaultValue = "asc") String sortName) {
 
-        return ResponseEntity.ok(userQueryService.getAll(page, size));
+        return ResponseEntity.ok(userQueryService.getAll(page, size, name, filterActive, sortName));
     }
 
     @GetMapping("/active")

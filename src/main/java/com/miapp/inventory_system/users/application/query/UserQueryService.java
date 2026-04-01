@@ -28,14 +28,28 @@ public class UserQueryService {
                         "No se encontró un usuario con el id: " + id));
     }
 
-    public PageResponse<UserResponse> getAll(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
-        Page<UserJpaEntity> result = jpaRepository.findAll(pageable);
+    public PageResponse<UserResponse> getAll(int page, int size, String name, String filterActive, String sortName) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sortName), "name"));
+
+        Page<UserJpaEntity> result;
+        boolean hasName = name != null && !name.isBlank();
+        boolean onlyActive = "active".equals(filterActive);
+
+        if (hasName && onlyActive) {
+            result = jpaRepository.findByActiveTrueAndNameContainingIgnoreCase(name, pageable);
+        } else if (hasName) {
+            result = jpaRepository.findByNameContainingIgnoreCase(name, pageable);
+        } else if (onlyActive) {
+            result = jpaRepository.findByActiveTrue(pageable);
+        } else {
+            result = jpaRepository.findAll(pageable);
+        }
+
         return toPageResponse(result);
     }
 
     public List<UserResponse> getAllActive() {
-        return jpaRepository.findByActiveTrue()
+        return jpaRepository.findAllActive()
                 .stream()
                 .map(this::toResponse)
                 .toList();

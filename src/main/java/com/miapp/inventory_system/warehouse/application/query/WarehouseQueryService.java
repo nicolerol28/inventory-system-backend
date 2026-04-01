@@ -27,8 +27,8 @@ public class WarehouseQueryService {
                         "No se encontró un almacen con el id: " + id));
     }
 
-    public PageResponse<WarehouseResponse> getAll(int page, int size, String name, String filterActive) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
+    public PageResponse<WarehouseResponse> getAll(int page, int size, String name, String filterActive, String sortName) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sortName), "name"));
 
         Page<WarehouseJpaEntity> result;
         boolean hasName = name != null && !name.isBlank();

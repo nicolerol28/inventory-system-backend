@@ -27,8 +27,8 @@ public class UnitQueryService {
                         "No existe una unidad con id: " + id));
     }
 
-    public PageResponse<UnitResponse> getAll(int page, int size, String name, String filterActive) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
+    public PageResponse<UnitResponse> getAll(int page, int size, String name, String filterActive, String sortName) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sortName), "name"));
 
         Page<UnitJpaEntity> result;
         boolean hasName = name != null && !name.isBlank();

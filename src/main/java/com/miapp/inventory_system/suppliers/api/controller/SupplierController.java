@@ -63,9 +63,10 @@ public class SupplierController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
             @RequestParam(required = false) String name,
-            @RequestParam(defaultValue = "all") String filterActive) {
+            @RequestParam(defaultValue = "all") String filterActive,
+            @RequestParam(defaultValue = "asc") String sortName) {
 
-        return ResponseEntity.ok(supplierQueryService.getAll(page, size, name, filterActive));
+        return ResponseEntity.ok(supplierQueryService.getAll(page, size, name, filterActive, sortName));
     }
 
     @GetMapping("/active")

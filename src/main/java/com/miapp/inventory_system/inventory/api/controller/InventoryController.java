@@ -6,6 +6,7 @@ import com.miapp.inventory_system.inventory.application.command.InitializeStockC
 import com.miapp.inventory_system.inventory.application.command.RegisterStockMovementCommand;
 import com.miapp.inventory_system.inventory.application.query.InventoryQueryService;
 import com.miapp.inventory_system.inventory.application.usecase.InitializeStockUseCase;
+import com.miapp.inventory_system.inventory.application.usecase.UpdateMinQuantityUseCase;
 import com.miapp.inventory_system.inventory.application.usecase.RegisterStockMovementUseCase;
 import com.miapp.inventory_system.inventory.domain.model.InventoryMovement;
 import com.miapp.inventory_system.inventory.domain.model.Stock;
@@ -27,6 +28,7 @@ public class InventoryController {
     private final InventoryApiMapper mapper;
     private final InventoryQueryService queryService;
     private final InitializeStockUseCase initializeStockUseCase;
+    private final UpdateMinQuantityUseCase updateMinQuantityUseCase;
 
     @PostMapping("/movements")
     public ResponseEntity<InventoryMovementResponse> registerMovement(
@@ -107,6 +109,27 @@ public class InventoryController {
 
         return ResponseEntity.ok(
                 queryService.getMovementsByWarehouse(warehouseId, page, size, movementType));
+    }
+
+    @PatchMapping("/stock/{id}/min-quantity")
+    public ResponseEntity<StockResponse> updateMinQuantity(
+            @PathVariable Long id,
+            @Valid @RequestBody UpdateMinQuantityRequest request) {
+
+        Stock stock = updateMinQuantityUseCase.execute(id, request.minQuantity());
+
+        StockResponse response = new StockResponse(
+                stock.getId(),
+                stock.getProductId(),
+                "Producto #" + stock.getProductId(),
+                stock.getWarehouseId(),
+                stock.getQuantity(),
+                stock.getMinQuantity(),
+                stock.isBelowMinimum(),
+                stock.getUpdatedAt()
+        );
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/movements/warehouse/{warehouseId}/date-range")

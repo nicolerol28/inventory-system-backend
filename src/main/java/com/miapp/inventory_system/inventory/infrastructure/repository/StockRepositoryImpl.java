@@ -17,6 +17,11 @@ public class StockRepositoryImpl implements StockRepository {
     private final StockMapper mapper;
 
     @Override
+    public Optional<Stock> findById(Long id) {
+        return jpaRepository.findById(id).map(mapper::toDomain);
+    }
+
+    @Override
     public Optional<Stock> findByProductIdAndWarehouseId(
             Long productId,
             Long warehouseId) {

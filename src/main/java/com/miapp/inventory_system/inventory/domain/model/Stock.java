@@ -44,6 +44,14 @@ public class Stock {
         this.updatedAt = LocalDateTime.now();
     }
 
+    public void updateMinQuantity(BigDecimal minQuantity) {
+        if (minQuantity == null || minQuantity.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("La cantidad mínima no puede ser negativa");
+        }
+        this.minQuantity = minQuantity;
+        this.updatedAt   = LocalDateTime.now();
+    }
+
     public boolean isBelowMinimum() {
         return this.quantity.compareTo(this.minQuantity) < 0;
     }

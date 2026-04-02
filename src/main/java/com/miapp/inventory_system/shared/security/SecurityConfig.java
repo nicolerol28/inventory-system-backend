@@ -65,8 +65,7 @@ public class SecurityConfig {
                 "http://localhost:5173",
                 "http://localhost:5174",
                 "https://inventory-system-frontend-chi.vercel.app",
-                "https://nicoleroldan.com",
-                "https://www.nicoleroldan.com"
+                "https://inventory.nicoleroldan.com"
         ));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));

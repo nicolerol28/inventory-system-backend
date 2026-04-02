@@ -64,6 +64,7 @@ public class SecurityConfig {
         configuration.setAllowedOrigins(List.of(
                 "http://localhost:5173",
                 "http://localhost:5174",
+                "https://inventory-system-frontend-chi.vercel.app",
                 "https://nicoleroldan.com",
                 "https://www.nicoleroldan.com"
         ));

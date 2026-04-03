@@ -21,7 +21,7 @@ public class DemoResetJob {
     private final DataSource dataSource;
     private final ResourceLoader resourceLoader;
 
-    @Scheduled(cron = "0 0 2 * * *")
+    @Scheduled(cron = "0 10 2 * * *")
     public void reset() {
         try {
             log.info("DemoResetJob: Iniciando limpieza total...");
@@ -55,6 +55,9 @@ public class DemoResetJob {
 
             log.info("DemoResetJob: Sembrando stock adicional V4...");
             executeSql("classpath:db/migration/V4__seed_stock_v3_products.sql");
+
+            log.info("DemoResetJob: Sembrando datos adicionales V5...");
+            executeSql("classpath:db/migration/V5__seed_additional_data.sql");
 
             log.info("DemoResetJob: ¡Reinicio completado con éxito!");
 

@@ -1,3 +1,30 @@
+-- Seed: usuario admin inicial
+INSERT INTO users (name, email, password, role, active, created_at, updated_at)
+VALUES (
+    'Administrador',
+    'admin@inventory.com',
+    '$2a$12$RxgHyl0IDfS8OyAboCZyr.Keh8b6BNtiGdmms9y7dqr.92m1Jv4gm',
+    'ADMIN',
+    TRUE,
+    NOW(),
+    NOW()
+);
+
+INSERT INTO users (name, email, password, role, active, created_at, updated_at) VALUES
+    ('Operador Bodega Principal', 'operador1@inventory.com', '$2a$12$RxgHyl0IDfS8OyAboCZyr.Keh8b6BNtiGdmms9y7dqr.92m1Jv4gm', 'OPERATOR', true, NOW(), NOW()),
+    ('Operador Bodega Norte',     'operador2@inventory.com', '$2a$12$RxgHyl0IDfS8OyAboCZyr.Keh8b6BNtiGdmms9y7dqr.92m1Jv4gm', 'OPERATOR', true, NOW(), NOW());
+
+INSERT INTO users (name, email, password, role, active, created_at, updated_at)
+VALUES (
+    'Admin Demo',
+    'demo@inventory.com',
+    '$2a$12$1INM5fwAO071W8nMoQ1.1Oq0w4JzzKjuo3qcLI4RMUyie.l/bOZy.',
+    'ADMIN',
+    true,
+    NOW(),
+    NOW()
+);
+
 -- Units
 INSERT INTO units (name, symbol, active, created_at) VALUES
     ('Unidad', 'UND', true, NOW()),
@@ -58,9 +85,3 @@ INSERT INTO inventory_movements (product_id, warehouse_id, supplier_id, register
     (6, 1, 3, 1, 'PURCHASE_ENTRY', 90.00, 0.00, 90.00, 'Compra inicial desinfectante', NOW()),
     (3, 2, 2, 1, 'PURCHASE_ENTRY', 150.00, 0.00, 150.00, 'Compra inicial arroz bodega norte', NOW()),
     (4, 3, 2, 1, 'PURCHASE_ENTRY', 80.00, 0.00, 80.00, 'Compra inicial aceite bodega sur', NOW());
-
--- Users adicionales
-INSERT INTO users (name, email, password, role, active, created_at, updated_at) VALUES
-    ('Operador Bodega Principal', 'operador1@inventory.com', '$2a$12$RxgHyl0IDfS8OyAboCZyr.Keh8b6BNtiGdmms9y7dqr.92m1Jv4gm', 'OPERATOR', true, NOW(), NOW()),
-    ('Operador Bodega Norte', 'operador2@inventory.com', '$2a$12$RxgHyl0IDfS8OyAboCZyr.Keh8b6BNtiGdmms9y7dqr.92m1Jv4gm', 'OPERATOR', true, NOW(), NOW()),
-    ('Admin Secundario', 'admin2@inventory.com', '$2a$12$RxgHyl0IDfS8OyAboCZyr.Keh8b6BNtiGdmms9y7dqr.92m1Jv4gm', 'ADMIN', true, NOW(), NOW());

@@ -104,15 +104,3 @@ CREATE TABLE IF NOT EXISTS inventory_movements (
     CONSTRAINT chk_quantity_after_non_negative
         CHECK (quantity_after >= 0)
 );
-
--- Seed: usuario admin inicial
-INSERT INTO users (name, email, password, role, active, created_at, updated_at)
-VALUES (
-    'Administrador',
-    'admin@inventory.com',
-    '$2a$12$RxgHyl0IDfS8OyAboCZyr.Keh8b6BNtiGdmms9y7dqr.92m1Jv4gm',
-    'ADMIN',
-    TRUE,
-    NOW(),
-    NOW()
-);

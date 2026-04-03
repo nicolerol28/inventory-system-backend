@@ -59,6 +59,9 @@ public class DemoResetJob {
             log.info("DemoResetJob: Sembrando datos adicionales V5...");
             executeSql("classpath:db/migration/V5__seed_additional_data.sql");
 
+            log.info("DemoResetJob: Sembrando datos adicionales V6...");
+            executeSql("classpath:db/migration/V6__seed_inactive_users_categories_units.sql");
+
             log.info("DemoResetJob: ¡Reinicio completado con éxito!");
 
         } catch (Exception e) {

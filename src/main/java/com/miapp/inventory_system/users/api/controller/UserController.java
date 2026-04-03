@@ -1,15 +1,19 @@
 package com.miapp.inventory_system.users.api.controller;
 
 import com.miapp.inventory_system.shared.dto.PageResponse;
+import com.miapp.inventory_system.users.api.dto.ChangePasswordRequest;
 import com.miapp.inventory_system.users.api.dto.UpdateUserRequest;
 import com.miapp.inventory_system.users.api.dto.UserResponse;
 import com.miapp.inventory_system.users.api.mapper.UserApiMapper;
+import com.miapp.inventory_system.users.application.command.ChangePasswordCommand;
 import com.miapp.inventory_system.users.application.query.UserQueryService;
+import com.miapp.inventory_system.users.application.usecase.ChangePasswordUseCase;
 import com.miapp.inventory_system.users.application.usecase.DeactivateUserUseCase;
 import com.miapp.inventory_system.users.application.usecase.UpdateUserUseCase;
 import com.miapp.inventory_system.users.domain.model.User;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +28,7 @@ public class UserController {
     private final DeactivateUserUseCase deactivateUserUseCase;
     private final UserQueryService userQueryService;
     private final UserApiMapper mapper;
+    private final ChangePasswordUseCase changePasswordUseCase;
 
     @PutMapping("/{id}")
     public ResponseEntity<UserResponse> update(
@@ -59,5 +64,13 @@ public class UserController {
     @GetMapping("/active")
     public ResponseEntity<List<UserResponse>> getAllActive() {
         return ResponseEntity.ok(userQueryService.getAllActive());
+    }
+
+    @PatchMapping("/{id}/password")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void changePassword(
+            @PathVariable Long id,
+            @Valid @RequestBody ChangePasswordRequest request) {
+        changePasswordUseCase.execute(new ChangePasswordCommand(id, request.currentPassword(), request.newPassword()));
     }
 }

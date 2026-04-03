@@ -73,6 +73,11 @@ public class User {
         this.updatedAt = LocalDateTime.now();
     }
 
+    public void changePassword(String newHashedPassword) {
+        this.password  = newHashedPassword;
+        this.updatedAt = LocalDateTime.now();
+    }
+
     public void deactivate() {
         if (!this.active) {
             throw new IllegalArgumentException(

@@ -1,8 +1,10 @@
 package com.miapp.inventory_system.users.api.controller;
 
 import com.miapp.inventory_system.shared.dto.PageResponse;
+import com.miapp.inventory_system.shared.security.JwtService;
 import com.miapp.inventory_system.users.api.dto.ChangePasswordRequest;
 import com.miapp.inventory_system.users.api.dto.UpdateUserRequest;
+import com.miapp.inventory_system.users.api.dto.UpdateUserResponse;
 import com.miapp.inventory_system.users.api.dto.UserResponse;
 import com.miapp.inventory_system.users.api.mapper.UserApiMapper;
 import com.miapp.inventory_system.users.application.command.ChangePasswordCommand;
@@ -29,14 +31,17 @@ public class UserController {
     private final UserQueryService userQueryService;
     private final UserApiMapper mapper;
     private final ChangePasswordUseCase changePasswordUseCase;
+    private final JwtService jwtService;
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserResponse> update(
+    public ResponseEntity<UpdateUserResponse> update(
             @PathVariable Long id,
             @Valid @RequestBody UpdateUserRequest request) {
 
         User user = updateUserUseCase.execute(mapper.toCommand(request, id));
-        return ResponseEntity.ok(mapper.toResponse(user));
+        String token = jwtService.generateToken(user.getId(), user.getEmail(), user.getRole().name(), user.getName());
+        return ResponseEntity.ok(new UpdateUserResponse(
+                user.getId(), user.getName(), user.getEmail(), user.getRole(), user.isActive(), token));
     }
 
     @DeleteMapping("/{id}")

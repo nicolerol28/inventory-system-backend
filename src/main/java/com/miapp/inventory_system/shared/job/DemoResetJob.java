@@ -21,7 +21,7 @@ public class DemoResetJob {
     private final DataSource dataSource;
     private final ResourceLoader resourceLoader;
 
-    @Scheduled(cron = "0 21 2 * * *")
+    @Scheduled(cron = "0 40 7 * * *")
     public void reset() {
         try {
             log.info("DemoResetJob: Iniciando limpieza total...");

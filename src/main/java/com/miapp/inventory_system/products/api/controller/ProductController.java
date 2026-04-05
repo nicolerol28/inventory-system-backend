@@ -10,39 +10,76 @@ import com.miapp.inventory_system.products.application.usecase.product.RegisterP
 import com.miapp.inventory_system.products.application.usecase.product.UpdateProductUseCase;
 import com.miapp.inventory_system.products.domain.model.Product;
 import com.miapp.inventory_system.shared.dto.PageResponse;
+import com.miapp.inventory_system.shared.gateway.StorageGateway;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/products")
 @RequiredArgsConstructor
 public class ProductController {
 
+    private static final long MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5 MB
+    private static final List<String> ALLOWED_IMAGE_TYPES = List.of("image/jpeg", "image/png", "image/webp");
+
     private final ProductQueryService productQueryService;
     private final ProductApiMapper mapper;
     private final DeactivateProductUseCase deactivateProductUseCase;
     private final RegisterProductUseCase registerProductUseCase;
     private final UpdateProductUseCase updateProductUseCase;
+    private final StorageGateway storageGateway;
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ProductResponse> register(
-            @Valid @RequestBody RegisterProductRequest request) {
+            @RequestPart("data") @Valid RegisterProductRequest request,
+            @RequestPart(value = "image", required = false) MultipartFile image) {
 
-        Product product = registerProductUseCase.execute(mapper.toCommand(request));
+        String imageUrl = uploadImageIfPresent(image);
+        Product product = registerProductUseCase.execute(
+                imageUrl != null ? mapper.toCommand(request, imageUrl) : mapper.toCommand(request));
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(mapper.toResponse(product));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ProductResponse> update(
             @PathVariable Long id,
-            @Valid @RequestBody UpdateProductRequest request) {
+            @RequestPart("data") @Valid UpdateProductRequest request,
+            @RequestPart(value = "image", required = false) MultipartFile image) {
 
-        Product product = updateProductUseCase.execute(mapper.toCommand(request, id));
+        String imageUrl = uploadImageIfPresent(image);
+        Product product = updateProductUseCase.execute(
+                imageUrl != null ? mapper.toCommand(request, id, imageUrl) : mapper.toCommand(request, id));
         return ResponseEntity.ok(mapper.toResponse(product));
+    }
+
+    private String uploadImageIfPresent(MultipartFile image) {
+        if (image == null || image.isEmpty()) {
+            return null;
+        }
+        String contentType = image.getContentType();
+        if (contentType == null || !ALLOWED_IMAGE_TYPES.contains(contentType)) {
+            throw new IllegalArgumentException(
+                    "Tipo de imagen no permitido. Se aceptan: image/jpeg, image/png, image/webp");
+        }
+        if (image.getSize() > MAX_IMAGE_SIZE) {
+            throw new IllegalArgumentException("La imagen no puede superar los 5 MB");
+        }
+        String original = image.getOriginalFilename() != null ? image.getOriginalFilename() : "image";
+        String fileName = "products/" + UUID.randomUUID() + "_" + original;
+        try {
+            return storageGateway.uploadFile(fileName, image.getBytes(), contentType);
+        } catch (Exception e) {
+            throw new RuntimeException("Error al subir la imagen: " + e.getMessage(), e);
+        }
     }
 
     @DeleteMapping("/{id}")

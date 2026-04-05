@@ -63,7 +63,8 @@ public class ProductQueryService {
                 entity.getSalePrice(),
                 entity.isActive(),
                 entity.getCreatedAt(),
-                entity.getUpdatedAt()
+                entity.getUpdatedAt(),
+                entity.getImageUrl()
         );
     }
 

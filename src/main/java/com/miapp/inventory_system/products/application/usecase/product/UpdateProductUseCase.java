@@ -41,6 +41,8 @@ public class UpdateProductUseCase {
                 command.purchasePrice(),
                 command.salePrice());
 
+        command.imageUrl().ifPresent(product::updateImage);
+
         return productRepository.save(product);
     }
 }

@@ -11,5 +11,6 @@ public record RegisterProductCommand(
         Long categoryId,
         Long supplierId,
         Optional<BigDecimal> purchasePrice,
-        Optional<BigDecimal> salePrice
+        Optional<BigDecimal> salePrice,
+        Optional<String> imageUrl
 ) {}

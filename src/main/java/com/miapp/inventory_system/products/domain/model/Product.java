@@ -21,6 +21,7 @@ public class Product {
     private boolean active;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private String imageUrl;
 
     private Product() {}
 
@@ -64,7 +65,8 @@ public class Product {
             Optional<BigDecimal> salePrice,
             boolean active,
             LocalDateTime createdAt,
-            LocalDateTime updatedAt) {
+            LocalDateTime updatedAt,
+            String imageUrl) {
 
         Product product = new Product();
         product.id          = id;
@@ -79,6 +81,7 @@ public class Product {
         product.active      = active;
         product.createdAt   = createdAt;
         product.updatedAt   = updatedAt;
+        product.imageUrl    = imageUrl;
 
         return product;
     }
@@ -104,6 +107,11 @@ public class Product {
         this.purchasePrice = purchasePrice;
         this.salePrice     = salePrice;
         this.updatedAt     = LocalDateTime.now();
+    }
+
+    public void updateImage(String imageUrl) {
+        this.imageUrl = imageUrl;
+        this.updatedAt = LocalDateTime.now();
     }
 
     public void deactivate() {

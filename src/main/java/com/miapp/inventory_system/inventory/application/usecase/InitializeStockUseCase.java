@@ -3,7 +3,7 @@ package com.miapp.inventory_system.inventory.application.usecase;
 import com.miapp.inventory_system.inventory.application.command.InitializeStockCommand;
 import com.miapp.inventory_system.inventory.domain.model.Stock;
 import com.miapp.inventory_system.inventory.domain.repository.StockRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

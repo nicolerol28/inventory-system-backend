@@ -15,5 +15,6 @@ public record ProductResponse(
         BigDecimal salePrice,
         boolean active,
         LocalDateTime createdAt,
-        LocalDateTime updatedAt
+        LocalDateTime updatedAt,
+        String imageUrl
 ) {}

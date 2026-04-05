@@ -35,6 +35,9 @@ public class RegisterProductUseCase {
                 command.supplierId(),
                 command.purchasePrice(),
                 command.salePrice());
+
+        command.imageUrl().ifPresent(product::updateImage);
+
         return productRepository.save(product);
 
     }

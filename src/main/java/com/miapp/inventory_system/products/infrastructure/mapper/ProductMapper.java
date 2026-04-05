@@ -22,7 +22,8 @@ public class ProductMapper {
                 Optional.ofNullable(entity.getSalePrice()),
                 entity.isActive(),
                 entity.getCreatedAt(),
-                entity.getUpdatedAt()
+                entity.getUpdatedAt(),
+                entity.getImageUrl()
         );
     }
 
@@ -45,6 +46,7 @@ public class ProductMapper {
         entity.setActive(domain.isActive());
         entity.setCreatedAt(domain.getCreatedAt());
         entity.setUpdatedAt(domain.getUpdatedAt());
+        entity.setImageUrl(domain.getImageUrl());
 
         return entity;
     }

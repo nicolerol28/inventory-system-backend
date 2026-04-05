@@ -22,7 +22,22 @@ public class ProductApiMapper {
                 request.categoryId(),
                 request.supplierId(),
                 Optional.ofNullable(request.purchasePrice()),
-                Optional.ofNullable(request.salePrice())
+                Optional.ofNullable(request.salePrice()),
+                Optional.empty()
+        );
+    }
+
+    public RegisterProductCommand toCommand(RegisterProductRequest request, String imageUrl) {
+        return new RegisterProductCommand(
+                request.name(),
+                request.description(),
+                request.sku(),
+                request.unitId(),
+                request.categoryId(),
+                request.supplierId(),
+                Optional.ofNullable(request.purchasePrice()),
+                Optional.ofNullable(request.salePrice()),
+                Optional.of(imageUrl)
         );
     }
 
@@ -36,7 +51,23 @@ public class ProductApiMapper {
                 request.categoryId(),
                 request.supplierId(),
                 Optional.ofNullable(request.purchasePrice()),
-                Optional.ofNullable(request.salePrice())
+                Optional.ofNullable(request.salePrice()),
+                Optional.empty()
+        );
+    }
+
+    public UpdateProductCommand toCommand(UpdateProductRequest request, Long id, String imageUrl) {
+        return new UpdateProductCommand(
+                id,
+                request.name(),
+                request.description(),
+                request.sku(),
+                request.unitId(),
+                request.categoryId(),
+                request.supplierId(),
+                Optional.ofNullable(request.purchasePrice()),
+                Optional.ofNullable(request.salePrice()),
+                Optional.of(imageUrl)
         );
     }
 
@@ -53,7 +84,8 @@ public class ProductApiMapper {
                 product.getSalePrice().orElse(null),
                 product.isActive(),
                 product.getCreatedAt(),
-                product.getUpdatedAt()
+                product.getUpdatedAt(),
+                product.getImageUrl()
         );
     }
 }

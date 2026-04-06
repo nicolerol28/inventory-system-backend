@@ -2,7 +2,7 @@
 
 A full-stack inventory management system built as a portfolio project, showcasing Clean Architecture, AI integration, and modern web development practices.
 
-**[Live Demo](https://inventory.nicoleroldan.com)** · **[Backend Repository](https://github.com/nicoleril28/inventory-system)**
+**[Live Demo](https://inventory.nicoleroldan.com)** · **[Backend Repository](https://github.com/nicolerol28/inventory-system)**
 
 > Demo credentials — click **"Probar demo"** ("Try demo") on the login page for instant access with pre-seeded data. Data resets nightly to ensure a consistent experience for every visitor.
 
@@ -101,7 +101,7 @@ A full-stack inventory management system built as a portfolio project, showcasin
 | Role | Permissions |
 |---|---|
 | `ADMIN` | Full access — includes user registration, user management, and all module operations |
-| `OPERATOR` | All modules (products, inventory, movements, suppliers, warehouses, settings) — cannot manage users |
+| `OPERATOR` | Products, inventory, movements, suppliers and warehouses — cannot access settings or user management |
 
 ### AI Integration
 - **Automatic inventory insights** on the Dashboard — powered by Gemini 2.5 Flash, analyzes current stock and generates 3 actionable insights (info / warning / critical) on every page load
@@ -163,7 +163,7 @@ The full API is documented and explorable via Swagger UI at `/swagger-ui/index.h
 ### Backend
 
 ```bash
-git clone https://github.com/nicoleril28/inventory-system
+git clone https://github.com/nicolerol28/inventory-system
 cd inventory-system
 docker-compose up -d
 cp .env.example .env
@@ -193,7 +193,7 @@ R2_PUBLIC_URL=https://pub-xxxx.r2.dev
 ### Frontend
 
 ```bash
-git clone https://github.com/nicoleril28/inventory-system-frontend
+git clone https://github.com/nicolerol28/inventory-system-frontend
 cd inventory-system-frontend
 cp .env.example .env
 # Fill in your environment variables
@@ -224,4 +224,4 @@ The following trade-offs were made consciously during development and are docume
 
 ## Author
 
-**Nicole Roldan** · [nicoleroldan.com](https://nicoleroldan.com) · [GitHub](https://github.com/nicoleril28)
+**Nicole Roldan** · [nicoleroldan.com](https://nicoleroldan.com) · [GitHub](https://github.com/nicolerol28)

@@ -14,6 +14,7 @@ public class UserMapper {
                 entity.getName(),
                 entity.getEmail(),
                 entity.getPassword(),
+                entity.getGoogleId(),
                 Role.valueOf(entity.getRole()),
                 entity.isActive(),
                 entity.getCreatedAt(),
@@ -27,6 +28,7 @@ public class UserMapper {
         entity.setName(user.getName());
         entity.setEmail(user.getEmail());
         entity.setPassword(user.getPassword());
+        entity.setGoogleId(user.getGoogleId());
         entity.setRole(user.getRole().name());
         entity.setActive(user.isActive());
         entity.setCreatedAt(user.getCreatedAt());

@@ -1,5 +1,6 @@
 package com.miapp.inventory_system.users.application.usecase;
 
+import com.miapp.inventory_system.users.application.RegisterUserResult;
 import com.miapp.inventory_system.users.application.command.RegisterUserCommand;
 import com.miapp.inventory_system.users.domain.model.User;
 import com.miapp.inventory_system.users.domain.repository.UserRepository;
@@ -16,7 +17,7 @@ public class RegisterUserUseCase {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public User execute(RegisterUserCommand command) {
+    public RegisterUserResult execute(RegisterUserCommand command) {
 
         if (userRepository.existsByEmail(command.email())) {
             throw new IllegalArgumentException(
@@ -32,6 +33,7 @@ public class RegisterUserUseCase {
                 command.role()
         );
 
-        return userRepository.save(user);
+        User saved = userRepository.save(user);
+        return new RegisterUserResult(saved.getId(), saved.getName(), saved.getEmail(), saved.getRole(), saved.isActive());
     }
 }

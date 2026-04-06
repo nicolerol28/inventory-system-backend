@@ -13,6 +13,8 @@ public interface UserJpaRepositorySpring extends JpaRepository<UserJpaEntity, Lo
 
     Optional<UserJpaEntity> findByEmail(String email);
 
+    Optional<UserJpaEntity> findByGoogleId(String googleId);
+
     boolean existsByEmail(String email);
 
     boolean existsByEmailAndIdNot(String email, Long id);

@@ -1,18 +1,16 @@
 package com.miapp.inventory_system.users.api.controller;
 
 import com.miapp.inventory_system.shared.dto.PageResponse;
-import com.miapp.inventory_system.shared.security.JwtService;
 import com.miapp.inventory_system.users.api.dto.ChangePasswordRequest;
 import com.miapp.inventory_system.users.api.dto.UpdateUserRequest;
 import com.miapp.inventory_system.users.api.dto.UpdateUserResponse;
 import com.miapp.inventory_system.users.api.dto.UserResponse;
 import com.miapp.inventory_system.users.api.mapper.UserApiMapper;
-import com.miapp.inventory_system.users.application.command.ChangePasswordCommand;
+import com.miapp.inventory_system.users.application.UpdateUserResult;
 import com.miapp.inventory_system.users.application.query.UserQueryService;
 import com.miapp.inventory_system.users.application.usecase.ChangePasswordUseCase;
 import com.miapp.inventory_system.users.application.usecase.DeactivateUserUseCase;
 import com.miapp.inventory_system.users.application.usecase.UpdateUserUseCase;
-import com.miapp.inventory_system.users.domain.model.User;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -31,17 +29,15 @@ public class UserController {
     private final UserQueryService userQueryService;
     private final UserApiMapper mapper;
     private final ChangePasswordUseCase changePasswordUseCase;
-    private final JwtService jwtService;
 
     @PutMapping("/{id}")
     public ResponseEntity<UpdateUserResponse> update(
             @PathVariable Long id,
             @Valid @RequestBody UpdateUserRequest request) {
 
-        User user = updateUserUseCase.execute(mapper.toCommand(request, id));
-        String token = jwtService.generateToken(user.getId(), user.getEmail(), user.getRole().name(), user.getName());
+        UpdateUserResult result = updateUserUseCase.execute(mapper.toCommand(request, id));
         return ResponseEntity.ok(new UpdateUserResponse(
-                user.getId(), user.getName(), user.getEmail(), user.getRole(), user.isActive(), token));
+                result.userId(), result.name(), result.email(), result.role(), result.active(), result.token()));
     }
 
     @DeleteMapping("/{id}")
@@ -76,6 +72,6 @@ public class UserController {
     public void changePassword(
             @PathVariable Long id,
             @Valid @RequestBody ChangePasswordRequest request) {
-        changePasswordUseCase.execute(new ChangePasswordCommand(id, request.currentPassword(), request.newPassword()));
+        changePasswordUseCase.execute(mapper.toCommand(request, id));
     }
 }

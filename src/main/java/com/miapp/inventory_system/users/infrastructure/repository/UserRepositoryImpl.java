@@ -44,4 +44,10 @@ public class UserRepositoryImpl implements UserRepository {
     public boolean existsByEmailAndIdNot(String email, Long id) {
         return jpaRepository.existsByEmailAndIdNot(email, id);
     }
+
+    @Override
+    public Optional<User> findByGoogleId(String googleId) {
+        return jpaRepository.findByGoogleId(googleId)
+                .map(mapper::toDomain);
+    }
 }

@@ -24,8 +24,11 @@ public class UserJpaEntity {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String password;
+
+    @Column(name = "google_id")
+    private String googleId;
 
     @Column(nullable = false)
     private String role;

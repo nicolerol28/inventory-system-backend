@@ -1,6 +1,8 @@
 package com.miapp.inventory_system.users.application.usecase;
 
 import com.miapp.inventory_system.shared.exception.ResourceNotFoundException;
+import com.miapp.inventory_system.shared.security.JwtService;
+import com.miapp.inventory_system.users.application.UpdateUserResult;
 import com.miapp.inventory_system.users.application.command.UpdateUserCommand;
 import com.miapp.inventory_system.users.domain.model.User;
 import com.miapp.inventory_system.users.domain.repository.UserRepository;
@@ -13,9 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class UpdateUserUseCase {
 
     private final UserRepository userRepository;
+    private final JwtService jwtService;
 
     @Transactional
-    public User execute(UpdateUserCommand command) {
+    public UpdateUserResult execute(UpdateUserCommand command) {
 
         User user = userRepository.findById(command.id())
                 .orElseThrow(() -> new ResourceNotFoundException(
@@ -28,6 +31,9 @@ public class UpdateUserUseCase {
 
         user.update(command.name(), command.email(), command.role());
 
-        return userRepository.save(user);
+        userRepository.save(user);
+
+        String token = jwtService.generateToken(user.getId(), user.getEmail(), user.getRole().name(), user.getName());
+        return new UpdateUserResult(token, user.getId(), user.getName(), user.getEmail(), user.getRole(), user.isActive());
     }
 }

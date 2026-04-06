@@ -1,8 +1,10 @@
 package com.miapp.inventory_system.users.api.mapper;
 
+import com.miapp.inventory_system.users.api.dto.ChangePasswordRequest;
 import com.miapp.inventory_system.users.api.dto.RegisterUserRequest;
 import com.miapp.inventory_system.users.api.dto.UpdateUserRequest;
 import com.miapp.inventory_system.users.api.dto.UserResponse;
+import com.miapp.inventory_system.users.application.command.ChangePasswordCommand;
 import com.miapp.inventory_system.users.application.command.RegisterUserCommand;
 import com.miapp.inventory_system.users.application.command.UpdateUserCommand;
 import com.miapp.inventory_system.users.domain.model.User;
@@ -27,6 +29,10 @@ public class UserApiMapper {
                 request.email(),
                 request.role()
         );
+    }
+
+    public ChangePasswordCommand toCommand(ChangePasswordRequest request, Long id) {
+        return new ChangePasswordCommand(id, request.currentPassword(), request.newPassword());
     }
 
     public UserResponse toResponse(User user) {

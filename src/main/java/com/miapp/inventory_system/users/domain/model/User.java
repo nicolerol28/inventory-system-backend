@@ -10,6 +10,7 @@ public class User {
     private String name;
     private String email;
     private String password;
+    private String googleId;
     private Role role;
     private boolean active;
     private LocalDateTime createdAt;
@@ -42,6 +43,7 @@ public class User {
             String name,
             String email,
             String password,
+            String googleId,
             Role role,
             boolean active,
             LocalDateTime createdAt,
@@ -52,12 +54,18 @@ public class User {
         user.name      = name;
         user.email     = email;
         user.password  = password;
+        user.googleId  = googleId;
         user.role      = role;
         user.active    = active;
         user.createdAt = createdAt;
         user.updatedAt = updatedAt;
 
         return user;
+    }
+
+    public void linkGoogle(String googleId) {
+        this.googleId  = googleId;
+        this.updatedAt = LocalDateTime.now();
     }
 
     public void update(

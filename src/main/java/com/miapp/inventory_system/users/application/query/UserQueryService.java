@@ -56,11 +56,17 @@ public class UserQueryService {
     }
 
     private UserResponse toResponse(UserJpaEntity entity) {
+        Role role;
+        try {
+            role = Role.valueOf(entity.getRole());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Rol inválido en base de datos: " + entity.getRole(), e);
+        }
         return new UserResponse(
                 entity.getId(),
                 entity.getName(),
                 entity.getEmail(),
-                Role.valueOf(entity.getRole()),
+                role,
                 entity.isActive(),
                 entity.getCreatedAt(),
                 entity.getUpdatedAt()

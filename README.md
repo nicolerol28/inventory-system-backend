@@ -2,7 +2,7 @@
 
 A full-stack inventory management system built as a portfolio project, showcasing Clean Architecture, AI integration, and modern web development practices.
 
-**[Live Demo](https://inventory.nicoleroldan.com)** · **[Backend Repository](https://github.com/nicolerol28/inventory-system)**
+**[Live Demo](https://inventory.nicoleroldan.com)** · **[Backend Repository](https://github.com/nicolerol28/inventory-system-backend)** · **[Frontend Repository](https://github.com/nicolerol28/inventory-system-frontend)**
 
 > Demo credentials — click **"Probar demo"** ("Try demo") on the login page for instant access with pre-seeded data. Data resets nightly to ensure a consistent experience for every visitor.
 
@@ -14,6 +14,7 @@ A full-stack inventory management system built as a portfolio project, showcasin
 - [Tech Stack](#tech-stack)
 - [Features](#features)
 - [Architecture](#architecture)
+- [Testing](#testing)
 - [Running Locally](#running-locally)
 - [Known Technical Debt](#known-technical-debt)
 - [Author](#author)
@@ -110,7 +111,7 @@ A full-stack inventory management system built as a portfolio project, showcasin
 ### Authentication
 - **Email + password** login
 - **Google OAuth 2.0** — sign in with Google (admin must create the account first)
-- **Demo access** — one-click access to a pre-seeded environment, resets nightly via scheduled job
+- **Demo access** — one-click access to a pre-seeded environment, resets nightly via a Spring @Scheduled job that truncates all tables, resets sequences, and re-executes the Flyway seed scripts
 
 ### Product Images
 - Upload product photos on create/edit (JPEG, PNG, WebP, max 5MB)
@@ -145,9 +146,35 @@ Key decisions:
 - **Gateway pattern** for external services — `StorageGateway` (R2), `GeminiGateway` (AI); the domain depends on interfaces, not on AWS SDK or Gemini SDK directly
 - **Flyway** for versioned database migrations
 - **JWT** stateless authentication with role-based authorization
+- **AssistantGuard** — a dedicated guard class protecting the AI assistant endpoint with two mechanisms: a sliding-window rate limiter (10 requests/minute per IP, implemented in-memory with ConcurrentHashMap) and a prompt injection detector that pattern-matches against a blocklist of known injection phrases (e.g. "ignore previous", "jailbreak", "DAN"). Violations return 400 or 429 without ever reaching the Gemini gateway
 
 The full API is documented and explorable via Swagger UI at `/swagger-ui/index.html`.
 
+---
+
+## Testing
+
+**235 unit tests passing**,  across the products, warehouse, inventory, suppliers, and users modules. The assistant module is pending. Target is 90% overall coverage, measured with JaCoCo.
+
+### Stack
+- **JUnit 5 + Mockito + AssertJ** for unit tests
+- **Testcontainers + PostgreSQL** for integration tests on JPA repositories and native queries
+- **JaCoCo** for coverage reports (`target/site/jacoco/index.html`)
+
+### Methodology
+Tests follow BDD structure (Given / When / Then) and are organized in three layers:
+
+**Domain tests** — pure unit tests on the domain model. Verify factory method invariants (`create` sets `active = true` and timestamps; rejects blank fields), and that `reconstitute` rehydrates all fields without re-validating them.
+
+**Use case tests** — each use case covers three mandatory scenarios:
+1. Happy path — verifies result and repository interactions
+2. Domain error — business rule violation throws the expected exception
+3. Short-circuit — confirms that expensive operations (e.g. `save`) never run after an early failure, using `verify(..., never())`
+
+`@ParameterizedTest` is used whenever multiple inputs produce the same exception type, avoiding repetitive test methods.
+
+**Integration tests** — extend a shared `BaseIntegrationTest` that spins up a real PostgreSQL container via `@ServiceConnection`. Each test is self-contained and does not rely on Flyway seed data.
+ 
 ---
 
 ## Running Locally
@@ -218,7 +245,7 @@ The following trade-offs were made consciously during development and are docume
 - `googleId` field in `User` domain model uses `String` instead of `Optional<String>` — forces null-checks in callers instead of making optionality explicit
 - Orphaned images in R2 are not deleted when a product image is replaced — `StorageGateway` has no `deleteFile()` method; old files accumulate in the bucket
 - `LoginUseCase` depends on Spring Security's `AuthenticationManager` — a framework dependency in the application layer, accepted as a pragmatic decision given Spring's auth model
-- Test coverage is in progress — 119 unit tests passing with 100% coverage on `products` and `warehouse` modules. Remaining modules (`inventory`, `suppliers`, `users`, `assistant`) are pending. Target: 90% overall coverage.
+- Test coverage is in progress — 235 unit tests passing across products, warehouse, inventory, suppliers, and users modules. The assistant module is pending. Target: 90% overall coverage.
 
 ---
 

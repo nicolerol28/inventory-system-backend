@@ -11,9 +11,9 @@
       "mcp__postman__createCollection",
       "mcp__postman__getCollections",
       "Bash(xargs grep:*)",
-      "Bash(grep -r \"import org.springframework\" /c/Users/nicol/OneDrive/Documentos/Estudio/inventory-monolito/inventory-system/src/main/java/com/miapp/inventory_system/*/domain --include=\"*.java\")",
       "Bash(grep:*)",
-      "Bash(ls -d /c/Users/nicol/OneDrive/Documentos/Estudio/inventory-monolito/inventory-system/src/main/java/com/miapp/inventory_system/*/)"
+      "Bash(./mvnw.cmd test:*)",
+      "Bash(./mvnw.cmd test-compile:*)"
     ]
   }
 }

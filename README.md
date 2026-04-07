@@ -218,7 +218,7 @@ The following trade-offs were made consciously during development and are docume
 - `googleId` field in `User` domain model uses `String` instead of `Optional<String>` — forces null-checks in callers instead of making optionality explicit
 - Orphaned images in R2 are not deleted when a product image is replaced — `StorageGateway` has no `deleteFile()` method; old files accumulate in the bucket
 - `LoginUseCase` depends on Spring Security's `AuthenticationManager` — a framework dependency in the application layer, accepted as a pragmatic decision given Spring's auth model
-- No unit or integration tests written yet — the only existing test is the default Spring Boot context load check. Adding test coverage for use cases and domain logic is the next planned iteration.
+- Test coverage is in progress — 119 unit tests passing with 100% coverage on `products` and `warehouse` modules. Remaining modules (`inventory`, `suppliers`, `users`, `assistant`) are pending. Target: 90% overall coverage.
 
 ---
 

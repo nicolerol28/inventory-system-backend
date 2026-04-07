@@ -489,7 +489,7 @@ class ProductJpaRepositoryIntegrationTest extends BaseIntegrationTest {
 
 ### Naming convention de tests
 
-- Clase: `{ClaseBAjoPrueba}Test` (unit) / `{ClaseBajoPrueba}IntegrationTest` (integration)
+- Clase: `{ClaseBajoPrueba}Test` (unit) / `{ClaseBajoPrueba}IntegrationTest` (integration)
 - Método: `should_{comportamiento_esperado}[_when_{condicion}]()`
 - `@DisplayName`: descripción legible en inglés
 - Agrupar tests relacionados con comentarios de sección: `// GROUP 1 — Happy path`

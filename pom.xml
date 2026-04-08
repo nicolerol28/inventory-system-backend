@@ -134,6 +134,31 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.11</version>
+                <configuration>
+                    <excludes>
+                        <!-- DTOs -->
+                        <exclude>**/api/dto/**</exclude>
+                        <!-- Mappers -->
+                        <exclude>**/api/mapper/**</exclude>
+                        <exclude>**/infrastructure/mapper/**</exclude>
+                        <!-- Controllers -->
+                        <exclude>**/api/controller/**</exclude>
+                        <!-- Query Services (solo lectura, sin lógica de negocio) -->
+                        <exclude>**/application/query/**</exclude>
+                        <!-- Repositorios JPA -->
+                        <exclude>**/infrastructure/repository/**</exclude>
+                        <exclude>**/infrastructure/entity/**</exclude>
+                        <!-- Configuración -->
+                        <exclude>**/shared/config/**</exclude>
+                        <exclude>**/shared/infrastructure/**</exclude>
+                        <exclude>**/shared/security/**</exclude>
+                        <exclude>**/shared/job/**</exclude>
+                        <!-- Commands (records planos) -->
+                        <exclude>**/application/command/**</exclude>
+                        <!-- Clase principal de Spring Boot -->
+                        <exclude>**/InventorySystemApplication.class</exclude>
+                    </excludes>
+                </configuration>
                 <executions>
                     <execution>
                         <id>prepare-agent</id>

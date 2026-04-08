@@ -154,7 +154,7 @@ The full API is documented and explorable via Swagger UI at `/swagger-ui/index.h
 
 ## Testing
 
-**235 unit tests passing**,  across the products, warehouse, inventory, suppliers, and users modules. The assistant module is pending. Target is 90% overall coverage, measured with JaCoCo.
+**279 unit tests passing**, 94% instruction coverage and 96% branch coverage measured with JaCoCo. Layers without business logic (controllers, mappers, DTOs, repositories) are excluded from the coverage report.
 
 ### Stack
 - **JUnit 5 + Mockito + AssertJ** for unit tests
@@ -245,7 +245,6 @@ The following trade-offs were made consciously during development and are docume
 - `googleId` field in `User` domain model uses `String` instead of `Optional<String>` — forces null-checks in callers instead of making optionality explicit
 - Orphaned images in R2 are not deleted when a product image is replaced — `StorageGateway` has no `deleteFile()` method; old files accumulate in the bucket
 - `LoginUseCase` depends on Spring Security's `AuthenticationManager` — a framework dependency in the application layer, accepted as a pragmatic decision given Spring's auth model
-- Test coverage is in progress — 235 unit tests passing across products, warehouse, inventory, suppliers, and users modules. The assistant module is pending. Target: 90% overall coverage.
 
 ---
 

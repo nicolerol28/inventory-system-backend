@@ -284,13 +284,15 @@ El módulo `users` tiene violaciones arquitectónicas menores documentadas como 
 
 | Módulo | Estado | Cobertura |
 |--------|--------|-----------|
-| `products` | ✅ Completo | ~100% |
-| `warehouse` | ✅ Completo | ~100% |
-| `inventory` | ⏳ Pendiente | — |
-| `suppliers` | ⏳ Pendiente | — |
-| `users` | ⏳ Pendiente | — |
-| `assistant` | ⏳ Pendiente | — |
-| `shared` | — | no aplica (infraestructura) |
+| `products` | ✅ Completo | 100% |
+| `warehouse` | ✅ Completo | 100% |
+| `inventory` | ✅ Completo | 100% |
+| `suppliers` | ✅ Completo | 100% |
+| `users` | ✅ Completo | 100% |
+| `assistant` | ✅ Completo | 100% |
+| `shared.guard` | ✅ Completo | 97% |
+| `shared.exception` | ✅ Completo | cubierto |
+| **Total** | ✅ | **94% instructions / 96% branches** |
 
 ### Tests de dominio (modelo puro)
 

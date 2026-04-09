@@ -36,10 +36,21 @@ public class GeminiClient implements GeminiGateway {
             if (response == null) {
                 return "Lo siento, no pude procesar tu pregunta. Intenta de nuevo.";
             }
+
             List<Map<String, Object>> candidates = (List<Map<String, Object>>) response.get("candidates");
             Map<String, Object> responseContent = (Map<String, Object>) candidates.get(0).get("content");
             List<Map<String, Object>> parts = (List<Map<String, Object>>) responseContent.get("parts");
-            return (String) parts.get(0).get("text");
+            String text = (String) parts.get(0).get("text");
+
+            Map<String, Object> usageMetadata = (Map<String, Object>) response.get("usageMetadata");
+            if (usageMetadata != null) {
+                System.out.println("[Gemini] tokens — prompt: " + usageMetadata.get("promptTokenCount")
+                        + " | respuesta: " + usageMetadata.get("candidatesTokenCount")
+                        + " | total: " + usageMetadata.get("totalTokenCount"));
+            }
+
+            return text;
+
         } catch (Exception e) {
             System.err.println("Error llamando a Gemini: " + e.getMessage());
             e.printStackTrace();

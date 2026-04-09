@@ -56,6 +56,26 @@ public class GlobalExceptionHandler {
     }
 
     /**
+     * Maneja rate limit del AssistantGuard.
+     * Devuelve HTTP 429 Too Many Requests.
+     */
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<ErrorResponse> handleIllegalState(
+            IllegalStateException ex,
+            HttpServletRequest request) {
+
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.TOO_MANY_REQUESTS.value(),
+                "Too Many Requests",
+                ex.getMessage(),
+                request.getRequestURI(),
+                LocalDateTime.now()
+        );
+
+        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(error);
+    }
+
+    /**
      * Captura cualquier excepción no manejada explícitamente.
      * Devuelve HTTP 500 Internal Server Error sin exponer detalles internos.
      */

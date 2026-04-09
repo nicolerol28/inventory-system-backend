@@ -25,7 +25,12 @@ public class AssistantController {
             @Valid @RequestBody ChatRequest request,
             HttpServletRequest httpRequest) {
 
-        String clientIp = httpRequest.getRemoteAddr();
+        String clientIp = httpRequest.getHeader("X-Forwarded-For");
+        if (clientIp == null || clientIp.isBlank()) {
+            clientIp = httpRequest.getRemoteAddr();
+        }
+        clientIp = clientIp.split(",")[0].trim();
+        System.out.println("[AssistantGuard] IP recibida: " + clientIp);
         String sanitized = guard.validate(request.message(), clientIp);
         String reply = sendChatMessageUseCase.execute(mapper.toCommand(sanitized, clientIp));
         return ResponseEntity.ok(mapper.toResponse(reply));

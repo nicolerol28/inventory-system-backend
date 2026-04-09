@@ -34,6 +34,7 @@ public class AssistantGuard {
     }
 
     private void enforceRateLimit(String clientIp) {
+        System.out.println("[AssistantGuard] IP recibida: " + clientIp);
         long now = System.currentTimeMillis();
         long oneMinuteAgo = now - 60_000L;
 

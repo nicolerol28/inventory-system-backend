@@ -3,6 +3,7 @@ package com.miapp.inventory_system.products.application.usecase.product;
 import com.miapp.inventory_system.products.application.command.product.RegisterProductCommand;
 import com.miapp.inventory_system.products.domain.model.Product;
 import com.miapp.inventory_system.products.domain.repository.ProductRepository;
+import com.miapp.inventory_system.shared.infrastructure.webhook.AiWebhookNotifier;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class RegisterProductUseCase {
 
     private final ProductRepository productRepository;
+    private final AiWebhookNotifier aiWebhookNotifier;
 
     @Transactional
     public Product execute(RegisterProductCommand command) {
@@ -38,7 +40,8 @@ public class RegisterProductUseCase {
 
         command.imageUrl().ifPresent(product::updateImage);
 
-        return productRepository.save(product);
-
+        Product saved = productRepository.save(product);
+        aiWebhookNotifier.notifyProductCreated(saved.getId());
+        return saved;
     }
 }

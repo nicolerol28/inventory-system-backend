@@ -3,6 +3,7 @@ package com.miapp.inventory_system.products.application.usecase.product;
 import com.miapp.inventory_system.products.application.command.product.UpdateProductCommand;
 import com.miapp.inventory_system.products.domain.model.Product;
 import com.miapp.inventory_system.products.domain.repository.ProductRepository;
+import com.miapp.inventory_system.shared.infrastructure.webhook.AiWebhookNotifier;
 import com.miapp.inventory_system.shared.exception.ResourceNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 public class UpdateProductUseCase {
 
     private final ProductRepository productRepository;
+    private final AiWebhookNotifier aiWebhookNotifier;
 
     @Transactional
     public Product execute(UpdateProductCommand command) {
@@ -43,6 +45,8 @@ public class UpdateProductUseCase {
 
         command.imageUrl().ifPresent(product::updateImage);
 
-        return productRepository.save(product);
+        Product saved = productRepository.save(product);
+        aiWebhookNotifier.notifyProductUpdated(saved.getId());
+        return saved;
     }
 }

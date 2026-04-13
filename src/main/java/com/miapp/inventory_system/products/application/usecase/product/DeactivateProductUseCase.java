@@ -3,6 +3,7 @@ package com.miapp.inventory_system.products.application.usecase.product;
 import com.miapp.inventory_system.products.domain.ProductStockChecker;
 import com.miapp.inventory_system.products.domain.model.Product;
 import com.miapp.inventory_system.products.domain.repository.ProductRepository;
+import com.miapp.inventory_system.shared.infrastructure.webhook.AiWebhookNotifier;
 import com.miapp.inventory_system.shared.exception.ResourceNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ public class DeactivateProductUseCase {
 
     private final ProductRepository productRepository;
     private final ProductStockChecker productStockChecker;
+    private final AiWebhookNotifier aiWebhookNotifier;
 
     @Transactional
     public void execute(Long id) {
@@ -28,5 +30,6 @@ public class DeactivateProductUseCase {
 
         product.deactivate();
         productRepository.save(product);
+        aiWebhookNotifier.notifyProductDeleted(id);
     }
 }

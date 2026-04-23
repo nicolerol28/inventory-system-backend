@@ -74,12 +74,26 @@ public class ProductController {
             throw new IllegalArgumentException("La imagen no puede superar los 5 MB");
         }
         String original = image.getOriginalFilename() != null ? image.getOriginalFilename() : "image";
-        String fileName = "products/" + UUID.randomUUID() + "_" + original;
+        String fileName = "products/" + UUID.randomUUID() + "_" + sanitizeFilename(original);
         try {
             return storageGateway.uploadFile(fileName, image.getBytes(), contentType);
         } catch (Exception e) {
             throw new RuntimeException("Error al subir la imagen: " + e.getMessage(), e);
         }
+    }
+
+    static String sanitizeFilename(String original) {
+        if (original == null || original.isBlank()) {
+            return UUID.randomUUID().toString();
+        }
+        String normalized = original.replace('\\', '/');
+        int lastSlash = normalized.lastIndexOf('/');
+        String name = lastSlash >= 0 ? normalized.substring(lastSlash + 1) : normalized;
+        name = name.replaceAll("[^a-zA-Z0-9._-]", "_");
+        if (name.isEmpty() || name.equals(".") || name.equals("..")) {
+            return UUID.randomUUID().toString();
+        }
+        return name;
     }
 
     @DeleteMapping("/{id}")

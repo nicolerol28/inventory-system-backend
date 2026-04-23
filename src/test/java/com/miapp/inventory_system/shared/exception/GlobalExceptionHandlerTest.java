@@ -113,8 +113,8 @@ class GlobalExceptionHandlerTest {
     // -----------------------------------------------------------------------
 
     @Test
-    @DisplayName("handleGeneric returns 500 Internal Server Error with correct body")
-    void should_return_500_when_unexpected_exception_is_thrown() {
+    @DisplayName("handleGeneric returns 500 with generic message, not the exception's message")
+    void should_return_500_with_generic_message_when_unexpected_exception_is_thrown() {
         // given
         RuntimeException ex = new RuntimeException("Error inesperado en el servidor");
 
@@ -127,7 +127,47 @@ class GlobalExceptionHandlerTest {
         assertThat(body).isNotNull();
         assertThat(body.status()).isEqualTo(500);
         assertThat(body.error()).isEqualTo("Internal Server Error");
-        assertThat(body.message()).isEqualTo("Error inesperado en el servidor");
+        assertThat(body.message()).isEqualTo("Error interno del servidor");
+        assertThat(body.path()).isEqualTo(REQUEST_URI);
+        assertThat(body.timestamp()).isNotNull();
+    }
+
+    @Test
+    @DisplayName("handleGeneric does not expose internal exception details to the client")
+    void should_not_expose_internal_exception_message_in_500_response() {
+        // given — an exception that contains sensitive internal details
+        RuntimeException ex = new RuntimeException("TABLE_USERS does not exist in schema public — JDBC error");
+
+        // when
+        ResponseEntity<ErrorResponse> response = handler.handleGeneric(ex, request);
+
+        // then — client receives a safe generic message, not the internal detail
+        assertThat(response.getBody()).isNotNull();
+        assertThat(response.getBody().message()).doesNotContain("TABLE_USERS");
+        assertThat(response.getBody().message()).doesNotContain("JDBC");
+        assertThat(response.getBody().message()).isEqualTo("Error interno del servidor");
+    }
+
+    // -----------------------------------------------------------------------
+    // GROUP 4b — handleForbidden
+    // -----------------------------------------------------------------------
+
+    @Test
+    @DisplayName("handleForbidden returns 403 Forbidden with correct body")
+    void should_return_403_when_forbidden_exception_is_thrown() {
+        // given
+        ForbiddenException ex = new ForbiddenException("No tiene permiso para cambiar la contraseña de otro usuario");
+
+        // when
+        ResponseEntity<ErrorResponse> response = handler.handleForbidden(ex, request);
+
+        // then
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+        ErrorResponse body = response.getBody();
+        assertThat(body).isNotNull();
+        assertThat(body.status()).isEqualTo(403);
+        assertThat(body.error()).isEqualTo("Forbidden");
+        assertThat(body.message()).isEqualTo("No tiene permiso para cambiar la contraseña de otro usuario");
         assertThat(body.path()).isEqualTo(REQUEST_URI);
         assertThat(body.timestamp()).isNotNull();
     }

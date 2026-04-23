@@ -1,5 +1,6 @@
 package com.miapp.inventory_system.users.application.usecase;
 
+import com.miapp.inventory_system.shared.exception.ForbiddenException;
 import com.miapp.inventory_system.shared.exception.ResourceNotFoundException;
 import com.miapp.inventory_system.users.application.command.ChangePasswordCommand;
 import com.miapp.inventory_system.users.domain.model.User;
@@ -18,6 +19,11 @@ public class ChangePasswordUseCase {
 
     @Transactional
     public void execute(ChangePasswordCommand command) {
+
+        if (!command.requesterIsAdmin() && !command.requesterUserId().equals(command.userId())) {
+            throw new ForbiddenException(
+                    "No tiene permiso para cambiar la contraseña de otro usuario");
+        }
 
         User user = userRepository.findById(command.userId())
                 .orElseThrow(() -> new ResourceNotFoundException(

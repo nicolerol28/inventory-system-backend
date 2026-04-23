@@ -31,8 +31,11 @@ public class UserApiMapper {
         );
     }
 
-    public ChangePasswordCommand toCommand(ChangePasswordRequest request, Long id) {
-        return new ChangePasswordCommand(id, request.currentPassword(), request.newPassword());
+    public ChangePasswordCommand toCommand(ChangePasswordRequest request, Long id,
+                                          Long requesterUserId, boolean requesterIsAdmin) {
+        return new ChangePasswordCommand(
+                id, request.currentPassword(), request.newPassword(),
+                requesterUserId, requesterIsAdmin);
     }
 
     public UserResponse toResponse(User user) {

@@ -1,6 +1,7 @@
 package com.miapp.inventory_system.shared.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -76,6 +78,26 @@ public class GlobalExceptionHandler {
     }
 
     /**
+     * Maneja acceso denegado a recursos de otro usuario.
+     * Devuelve HTTP 403 Forbidden.
+     */
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<ErrorResponse> handleForbidden(
+            ForbiddenException ex,
+            HttpServletRequest request) {
+
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.FORBIDDEN.value(),
+                "Forbidden",
+                ex.getMessage(),
+                request.getRequestURI(),
+                LocalDateTime.now()
+        );
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
+    }
+
+    /**
      * Captura cualquier excepción no manejada explícitamente.
      * Devuelve HTTP 500 Internal Server Error sin exponer detalles internos.
      */
@@ -84,12 +106,12 @@ public class GlobalExceptionHandler {
             Exception ex,
             HttpServletRequest request) {
 
-        ex.printStackTrace();
+        log.error("Unhandled exception on {}: ", request.getRequestURI(), ex);
 
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 "Internal Server Error",
-                ex.getMessage(),
+                "Error interno del servidor",
                 request.getRequestURI(),
                 LocalDateTime.now()
         );

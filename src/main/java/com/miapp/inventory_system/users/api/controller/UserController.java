@@ -1,6 +1,7 @@
 package com.miapp.inventory_system.users.api.controller;
 
 import com.miapp.inventory_system.shared.dto.PageResponse;
+import com.miapp.inventory_system.shared.security.JwtService;
 import com.miapp.inventory_system.users.api.dto.ChangePasswordRequest;
 import com.miapp.inventory_system.users.api.dto.UpdateUserRequest;
 import com.miapp.inventory_system.users.api.dto.UpdateUserResponse;
@@ -11,6 +12,7 @@ import com.miapp.inventory_system.users.application.query.UserQueryService;
 import com.miapp.inventory_system.users.application.usecase.ChangePasswordUseCase;
 import com.miapp.inventory_system.users.application.usecase.DeactivateUserUseCase;
 import com.miapp.inventory_system.users.application.usecase.UpdateUserUseCase;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -29,6 +31,7 @@ public class UserController {
     private final UserQueryService userQueryService;
     private final UserApiMapper mapper;
     private final ChangePasswordUseCase changePasswordUseCase;
+    private final JwtService jwtService;
 
     @PutMapping("/{id}")
     public ResponseEntity<UpdateUserResponse> update(
@@ -71,7 +74,11 @@ public class UserController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void changePassword(
             @PathVariable Long id,
-            @Valid @RequestBody ChangePasswordRequest request) {
-        changePasswordUseCase.execute(mapper.toCommand(request, id));
+            @Valid @RequestBody ChangePasswordRequest request,
+            HttpServletRequest httpRequest) {
+        String token = httpRequest.getHeader("Authorization").substring(7);
+        Long requesterUserId = jwtService.extractUserId(token);
+        boolean requesterIsAdmin = "ADMIN".equals(jwtService.extractRole(token));
+        changePasswordUseCase.execute(mapper.toCommand(request, id, requesterUserId, requesterIsAdmin));
     }
 }

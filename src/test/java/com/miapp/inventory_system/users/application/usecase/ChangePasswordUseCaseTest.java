@@ -1,5 +1,6 @@
 package com.miapp.inventory_system.users.application.usecase;
 
+import com.miapp.inventory_system.shared.exception.ForbiddenException;
 import com.miapp.inventory_system.shared.exception.ResourceNotFoundException;
 import com.miapp.inventory_system.users.application.command.ChangePasswordCommand;
 import com.miapp.inventory_system.users.domain.model.Role;
@@ -60,8 +61,9 @@ class ChangePasswordUseCaseTest {
                 LocalDateTime.now(), LocalDateTime.now());
     }
 
+    // buildCommand: requester == owner (USER_ID), not admin — covers the own-password happy path
     private ChangePasswordCommand buildCommand() {
-        return new ChangePasswordCommand(USER_ID, CURRENT_PASSWORD, NEW_PASSWORD);
+        return new ChangePasswordCommand(USER_ID, CURRENT_PASSWORD, NEW_PASSWORD, USER_ID, false);
     }
 
     // -------------------------------------------------------------------------
@@ -158,5 +160,69 @@ class ChangePasswordUseCaseTest {
         // then — short-circuit
         verify(passwordEncoder, never()).encode(anyString());
         verify(userRepository, never()).save(any());
+    }
+
+    // -------------------------------------------------------------------------
+    // GROUP 6 — IDOR: authorization checks
+    // -------------------------------------------------------------------------
+
+    @Test
+    @DisplayName("execute allows user to change their own password (requesterUserId == userId)")
+    void should_allow_user_to_change_own_password() {
+        // given 
+        ChangePasswordCommand command = new ChangePasswordCommand(
+                USER_ID, CURRENT_PASSWORD, NEW_PASSWORD, USER_ID, false);
+        when(userRepository.findById(USER_ID)).thenReturn(Optional.of(buildUser()));
+        when(passwordEncoder.matches(CURRENT_PASSWORD, STORED_HASH)).thenReturn(true);
+        when(passwordEncoder.encode(NEW_PASSWORD)).thenReturn(NEW_HASH);
+        when(userRepository.save(any(User.class))).thenAnswer(inv -> inv.getArgument(0));
+
+        // when — must not throw
+        useCase.execute(command);
+
+        // then
+        verify(userRepository).save(any(User.class));
+    }
+
+    @Test
+    @DisplayName("execute throws ForbiddenException when non-admin tries to change another user's password")
+    void should_throw_forbidden_when_operator_tries_to_change_another_user_password() {
+        // given 
+        Long anotherRequesterId = 5L;
+        ChangePasswordCommand command = new ChangePasswordCommand(
+                USER_ID, CURRENT_PASSWORD, NEW_PASSWORD, anotherRequesterId, false);
+
+        // when / then
+        assertThatThrownBy(() -> useCase.execute(command))
+                .isInstanceOf(ForbiddenException.class)
+                .hasMessageContaining("permiso");
+
+        // then — short-circuit: no DB access at all
+        verify(userRepository, never()).findById(any());
+        verify(userRepository, never()).save(any());
+    }
+
+    @Test
+    @DisplayName("execute allows admin to change another user's password")
+    void should_allow_admin_to_change_another_user_password() {
+        // given 
+        Long adminId = 1L;
+        Long targetUserId = 99L;
+        User targetUser = User.reconstitute(targetUserId, "Other User", "other@example.com",
+                STORED_HASH, null, Role.OPERATOR, true,
+                java.time.LocalDateTime.now(), java.time.LocalDateTime.now());
+        ChangePasswordCommand command = new ChangePasswordCommand(
+                targetUserId, CURRENT_PASSWORD, NEW_PASSWORD, adminId, true);
+
+        when(userRepository.findById(targetUserId)).thenReturn(Optional.of(targetUser));
+        when(passwordEncoder.matches(CURRENT_PASSWORD, STORED_HASH)).thenReturn(true);
+        when(passwordEncoder.encode(NEW_PASSWORD)).thenReturn(NEW_HASH);
+        when(userRepository.save(any(User.class))).thenAnswer(inv -> inv.getArgument(0));
+
+        // when — must not throw
+        useCase.execute(command);
+
+        // then
+        verify(userRepository).save(any(User.class));
     }
 }

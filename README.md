@@ -60,6 +60,16 @@ A full-stack inventory management system built as a portfolio project, showcasin
 
 ## Tech Stack
 
+### Infrastructure
+| | |
+|---|---|
+| Server | MacBook Pro — Ubuntu Server 22.04 LTS |
+| Containers | Docker + Docker Compose |
+| Tunnel | Cloudflare Tunnel (HTTPS, no public IP required) |
+| CDN & DNS | Cloudflare |
+| Frontend | Vercel |
+| Storage | Cloudflare R2 |
+
 ### Backend
 | | |
 |---|---|
@@ -72,7 +82,7 @@ A full-stack inventory management system built as a portfolio project, showcasin
 | AI | Google Gemini 2.5 Flash |
 | Storage | Cloudflare R2 (S3-compatible) |
 | API Docs | SpringDoc OpenAPI (Swagger UI) |
-| Deploy | Railway |
+| Deploy | Self-hosted (Ubuntu Server 22.04 + Docker) |
 
 ### Frontend
 | | |
